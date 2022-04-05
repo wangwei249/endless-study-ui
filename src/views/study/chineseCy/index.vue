@@ -1,37 +1,37 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="${comment}" prop="name">
+      <el-form-item label="名称" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入${comment}"
+          placeholder="名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="${comment}" prop="spell">
+      <el-form-item label="拼音" prop="spell">
         <el-input
           v-model="queryParams.spell"
-          placeholder="请输入${comment}"
+          placeholder="请输入拼音"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="${comment}" prop="derivation">
+      <el-form-item label="来源" prop="derivation">
         <el-input
           v-model="queryParams.derivation"
-          placeholder="请输入${comment}"
+          placeholder="来源"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="${comment}" prop="samples">
+      <el-form-item label="示例" prop="samples">
         <el-input
           v-model="queryParams.samples"
-          placeholder="请输入${comment}"
+          placeholder="示例"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -92,13 +92,13 @@
 
     <el-table v-loading="loading" :data="chineseCyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="${comment}" align="center" prop="name" />
-      <el-table-column label="${comment}" align="center" prop="spell" />
-      <el-table-column label="${comment}" align="center" prop="content" />
-      <el-table-column label="${comment}" align="center" prop="derivation" />
-      <el-table-column label="${comment}" align="center" prop="samples" />
-      <el-table-column label="${comment}" align="center" prop="type" />
+      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="名称" align="center" prop="name" />
+      <el-table-column label="读音" align="center" prop="spell" />
+      <el-table-column label="解释" align="center" prop="content" />
+      <el-table-column label="来源" align="center" prop="derivation" />
+      <el-table-column label="示例" align="center" prop="samples" />
+      <el-table-column label="类型" align="center" prop="type" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
