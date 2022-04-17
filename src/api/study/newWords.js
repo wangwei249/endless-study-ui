@@ -9,6 +9,23 @@ export function listNewWords(query) {
   })
 }
 
+// 查询生词列表【随机查询一个练习】
+export function listNewWordsRandom(query) {
+  return request({
+    url: '/study/newWords/listRandom',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询生词汇总信息【总数，已消灭，未消灭】
+export function selectNewWordsCollect(id) {
+  return request({
+    url: '/study/newWords/selectNewWordsCollect/'+id,
+    method: 'get'
+  })
+}
+
 // 查询生词详细
 export function getNewWords(id) {
   return request({

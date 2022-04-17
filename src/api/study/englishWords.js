@@ -42,3 +42,13 @@ export function delEnglishWords(id) {
     method: 'delete'
   })
 }
+
+
+// 查询英语单词列表【suggest查询，只取前五条】
+export function listEnglishWordsSuggest(query) {
+  return request({
+    url: '/study/englishWords/listSuggest',
+    method: 'get',
+    params: query
+  })
+}
