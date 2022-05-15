@@ -26,6 +26,24 @@ export function selectNewWordsCollect(id) {
   })
 }
 
+// 查询线性图表信息【查询月份目标设定的目标值，完成值，通过值】
+export function selectExpectActual(id) {
+  return request({
+    url: '/study/newWords/selectExpectActual/'+id,
+    method: 'get'
+  })
+}
+
+// 查询应战数据图表【应战数，成功数，失败数】
+export function selectChallengeCollect(id,type) {
+  return request({
+    url: '/study/newWords/selectChallengeCollect/'+id+'/'+type,
+    method: 'get'
+  })
+}
+
+
+
 // 查询生词详细
 export function getNewWords(id) {
   return request({
@@ -57,5 +75,14 @@ export function delNewWords(id) {
   return request({
     url: '/study/newWords/' + id,
     method: 'delete'
+  })
+}
+
+// 新增生词
+export function addChallenge(data) {
+  return request({
+    url: '/study/newWords/addChallenge',
+    method: 'post',
+    data: data
   })
 }

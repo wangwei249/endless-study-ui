@@ -7,9 +7,15 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            访客
+            生词总数
           </div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="allNum" :duration="2600" class="card-panel-num" />
+        </div>
+        <div class="card-panel-description">
+          <div class="card-panel-text">
+            已解决
+          </div>
+          <count-to :start-val="0" :end-val="allNum" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -20,7 +26,8 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            消息
+            消息 
+            <!-- <a href="http://www.baidu.com/"><input type="button" value='百度'></a> -->
           </div>
           <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
         </div>
@@ -57,16 +64,41 @@
 
 <script>
 import CountTo from 'vue-count-to'
+import { listNewWords, listNewWordsRandom,selectNewWordsCollect,getNewWords, delNewWords, addNewWords, updateNewWords} from "@/api/study/newWords";
 
 export default {
   components: {
     CountTo
   },
+  data() {
+    return { 
+      allNum: 0,  //生词总数
+      passNum: 0, //已消灭数
+      aliveNum: 0  //未掌握数 
+    };
+  },
   methods: {
-    handleSetLineChartData(type) {
-      this.$emit('handleSetLineChartData', type)
+    handleSetLineChartData(type) { 
+      if(type == 'newVisitis'){
+        this.$router.push({ path:'/study/newWords'  }); //转向“生词”页面
+      }else if(type == 'messages'){
+         
+      }
+      
+      this.$emit('handleSetLineChartData', type);
     }
+  },
+
+  created() { 
+    //模糊查询单词返回满足条件的前五条
+    selectNewWordsCollect(this.$store.state.user.id).then(response => {  
+        this.allNum = response.allNum; 
+        this.passNum = response.passNum; 
+        this.aliveNum = response.aliveNum; 
+    
+    });
   }
+
 }
 </script>
 

@@ -1,10 +1,10 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">登陆吉想敏捷开发框架</h3>
-      <h4 class="title" style="color:red;">
+      <h3 class="title">学习系统</h3>
+      <!-- <h4 class="title" style="color:red;">
       	<a href="https://item.taobao.com/item.htm?id=618814981963" target="_blank">版权所有 侵权必究 授权店铺购买源码</a>
-      </h4>
+      </h4> -->
       <el-form-item prop="username">
         <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -51,7 +51,7 @@
     </el-form>
     <!--  底部  -->    
     <div class="el-login-footer">
-      <span>Copyright © 2019-2020 <a href="http://jeethink.vip">jeethink.vip</a> All Rights Reserved.</span>
+      <span>Copyright © 2022-2025 <a href="http://wangwei.vip">wangwei.vip</a> All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -151,7 +151,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/image/login-background.jpg");
+  background-image: url("../assets/image/loginBackNew.webp");
   background-size: cover;
 }
 .title {

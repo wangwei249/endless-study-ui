@@ -23,23 +23,11 @@ export default {
     height: {
       type: String,
       default: '300px'
-    },
-    chartData: {
-      type: Object,
-      required: true
     }
   },
   data() {
     return {
       chart: null
-    }
-  },
-  watch: {
-    chartData: {
-      deep: true,
-      handler(val) {
-        this.setOptions(val)
-      }
     }
   },
   mounted() {
@@ -59,7 +47,7 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
       this.setOptions(this.chartData)
     },
-    setOptions({indicator,legendData, data } = {}) {
+    setOptions({ indicator,legendData, data } = {}) {
       this.chart.setOption({
         tooltip: {
           trigger: 'axis',
@@ -68,7 +56,7 @@ export default {
           }
         },
         radar: {
-          radius: '63%',  //控制图形大小，太大的话可能上面的字体会显示不全
+          radius: '66%',
           center: ['50%', '42%'],
           splitNumber: 8,
           splitArea: {
@@ -81,12 +69,16 @@ export default {
               shadowOffsetY: 15
             }
           },
-          indicator: indicator
+          indicator: [
+            { name: '生词数量', max: 10000 },
+            { name: '练习准确率', max: 20000 },
+            { name: '消灭生词数', max: 20000 }
+          ]
         },
         legend: {
           left: 'center',
           bottom: '10',
-          data: legendData
+          data: ['Allocated Budget', 'Expected Spending', 'Actual Spending']
         },
         series: [{
           type: 'radar',
@@ -100,7 +92,20 @@ export default {
               opacity: 1
             }
           },
-          data: data,
+          data: [
+            {
+              value: [10000, 7000, 12000],
+              name: 'Allocated Budget'
+            },
+            {
+              value: [4000, 9000, 15000],
+              name: 'Expected Spending'
+            },
+            {
+              value: [5500, 11000, 12000],
+              name: 'Actual Spending'
+            }
+          ],
           animationDuration: animationDuration
         }]
       })  

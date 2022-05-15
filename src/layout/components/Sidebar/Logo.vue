@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: '吉想敏捷开发框架',
+      title: '学习系统',
       logo: logoImg
     }
   }

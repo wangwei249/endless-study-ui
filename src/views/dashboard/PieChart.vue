@@ -21,11 +21,23 @@ export default {
     height: {
       type: String,
       default: '300px'
+    },
+    chartData: {
+      type: Array,
+      required: true
     }
   },
   data() {
     return {
       chart: null
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      handler(val) {
+        this.setOptions(val)
+      }
     }
   },
   mounted() {
@@ -43,7 +55,9 @@ export default {
   methods: {
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
-
+      this.setOptions(this.chartData)
+    },
+    setOptions(actualData  = {}) {
       this.chart.setOption({
         tooltip: {
           trigger: 'item',
@@ -52,22 +66,16 @@ export default {
         legend: {
           left: 'center',
           bottom: '10',
-          data: ['Industries', 'Technology', 'Forex', 'Gold', 'Forecasts']
+          data: ['已消灭', '可练习', '需等待']
         },
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '全部生词状态分布',
             type: 'pie',
             roseType: 'radius',
-            radius: [15, 95],
+            radius: [15, 85],
             center: ['50%', '38%'],
-            data: [
-              { value: 320, name: 'Industries' },
-              { value: 240, name: 'Technology' },
-              { value: 149, name: 'Forex' },
-              { value: 100, name: 'Gold' },
-              { value: 59, name: 'Forecasts' }
-            ],
+            data: actualData,
             animationEasing: 'cubicInOut',
             animationDuration: 2600
           }

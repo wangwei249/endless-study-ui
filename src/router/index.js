@@ -59,8 +59,10 @@ export const constantRoutes = [
     children: [
       {
         path: 'study',
-        component: (resolve) => require(['@/views/index'], resolve),
-        name: '首页',
+        // component: (resolve) => require(['@/views/index'], resolve),  //默认转向首页，带菜单
+        // name: '首页',
+        component: (resolve) => require(['@/views/study/newWords'], resolve),  //直接转向生词首页
+        name: '生词首页',
         meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
       }
     ]
