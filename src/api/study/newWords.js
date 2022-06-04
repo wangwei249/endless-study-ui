@@ -26,6 +26,14 @@ export function selectNewWordsCollect(id) {
   })
 }
 
+// 查询好友动态
+export function selectFriendsDyn(id) {
+  return request({
+    url: '/study/newWords/selectFriendsDyn/'+id,
+    method: 'get'
+  })
+}
+
 // 查询线性图表信息【查询月份目标设定的目标值，完成值，通过值】
 export function selectExpectActual(id) {
   return request({

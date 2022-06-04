@@ -1,11 +1,11 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
+  <div :class="classObj" class="app-wrapper" >
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
+    <sidebar class="sidebar-container" v-if="userName == 'admin'"/>
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
-        <tags-view v-if="needTagsView" />
+        <navbar v-if="userName == 'admin'"/>
+        <tags-view v-if="needTagsView && userName == 'admin'" />
       </div>
       <app-main />
       <right-panel v-if="showSettings">
@@ -13,6 +13,10 @@
       </right-panel>
     </div>
   </div>
+ 
+
+  
+
 </template>
 
 <script>
@@ -31,6 +35,12 @@ export default {
     Sidebar,
     TagsView
   },
+  data() {
+    return {
+       userName: this.$store.state.user.name,
+    }
+  },
+
   mixins: [ResizeMixin],
   computed: {
     ...mapState({
@@ -53,6 +63,10 @@ export default {
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     }
+  },
+
+  created() {
+    //alert(this.userName);
   }
 }
 </script>

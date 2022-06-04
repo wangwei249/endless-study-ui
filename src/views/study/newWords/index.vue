@@ -1,46 +1,112 @@
 <template>
-  <div class="app-container">
-      <el-row :gutter="40" class="panel-group">
-      <el-col :xs="5" :sm="5" :lg="4" class="card-panel-col">
-        <div class="card-panel" @click="getListByStatus('')">
-          <div class="card-panel-icon-wrapper icon-people">
-            <svg-icon icon-class="chart" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-              总数
-            </div>
-            <count-to :start-val="0" :end-val="allNum" :duration="2600" class="card-panel-num" />
-          </div> 
+  <div>
+
+      <el-row :gutter="24" style="margin-top:0px;margin-bottom:6px;padding-left:10px;"> 
+         <el-card :body-style="{ padding: '0px'}" >
+           <div class="page-header-content">
+              <div class="avatar">
+                <el-avatar :src="avater" size="large"></el-avatar>
+              </div>  
+              <div class="content">
+                <div class="content-title"> 
+                   {{nickName}}
+                </div>
+                <div>前端工程师 | 蚂蚁金服 - 某某某事业群</div>
+              </div>
+           
+
+
+             <div style="margin-top:17px;">  
+                 <el-badge  value="" class="item"  type="warning">
+                  <el-button size="small"   icon="el-icon-edit" circle></el-button>
+                </el-badge>
+             </div> 
+             <div style="margin-top:17px;"> 
+               <el-tooltip class="item" effect="dark" content="新的朋友审核" placement="top-start">    
+                <el-badge :value="2" class="item" type="success">
+                  <el-button size="small"  icon="el-icon-chat-dot-round" circle ></el-button>
+                </el-badge>
+                </el-tooltip>
+             </div> 
+             <div style="margin-top:17px;"> 
+                <el-badge  value="" class="item" type="info">
+                  <el-button size="small"  icon="el-icon-user" circle ></el-button>
+                </el-badge>
+             </div> 
+             <div style="margin-top:17px;margin-right:17px;"> 
+                <el-badge  value="" class="item" type="info">
+                  <el-button size="small" type="warning" icon="el-icon-switch-button" circle></el-button>
+                </el-badge>
+             </div> 
         </div>
-      </el-col>
-      <el-col :xs="5" :sm="5" :lg="4" class="card-panel-col">
-        <div class="card-panel" @click="getListByStatus('D')">
-          <div class="card-panel-icon-wrapper icon-eye">
-            <svg-icon icon-class="eye" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-               消灭 
+              
+
+          
+         </el-card> 
+    </el-row>  
+ 
+
+    <el-row :gutter="24" class="panel-group">
+    
+      <el-col :span="14"> 
+
+      <el-row :gutter="24">  
+        <el-col :span="6" class="card-panel-col">
+          
+          <div class="card-panel" @click="getListByStatus('')">
+            <div class="card-panel-icon-wrapper icon-people">
+              <svg-icon icon-class="chart" class-name="card-panel-icon" />
             </div>
-            <count-to :start-val="0" :end-val="passNum" :duration="3000" class="card-panel-num" /> 
+            <div class="card-panel-description">
+              <div class="card-panel-text">
+                总数
+              </div>
+              <count-to :start-val="0" :end-val="allNum" :duration="2600" class="card-panel-num" />
+            </div> 
           </div> 
-        </div>
-      </el-col>
-      <el-col :xs="5" :sm="5" :lg="4" class="card-panel-col">
-        <div class="card-panel" @click="getListByStatus('A')">
-          <div class="card-panel-icon-wrapper icon-eyeopen">
-            <svg-icon icon-class="eye-open" class-name="card-panel-icon" />
-          </div>
-          <div class="card-panel-description">
-            <div class="card-panel-text">
-               存活
+        </el-col>
+        <el-col :span="6" class="card-panel-col">
+          <div class="card-panel" @click="getListByStatus('D')">
+            <div class="card-panel-icon-wrapper icon-eye">
+              <svg-icon icon-class="eye" class-name="card-panel-icon" />
             </div>
-            <count-to :start-val="0" :end-val="aliveNum" :duration="3200" class="card-panel-num" />
-          </div> 
-        </div>
-      </el-col>
-      <el-col :xs="5" :sm="5" :lg="4" class="card-panel-col">
+            <div class="card-panel-description">
+              <div class="card-panel-text">
+                消灭 
+              </div>
+              <count-to :start-val="0" :end-val="passNum" :duration="3000" class="card-panel-num" /> 
+            </div> 
+          </div>
+        </el-col>
+        <el-col :span="6" class="card-panel-col">
+          <div class="card-panel" @click="getListByStatus('A')">
+            <div class="card-panel-icon-wrapper icon-eyeopen">
+              <svg-icon icon-class="eye-open" class-name="card-panel-icon" />
+            </div>
+            <div class="card-panel-description">
+              <div class="card-panel-text">
+                存活
+              </div>
+              <count-to :start-val="0" :end-val="aliveNum" :duration="3200" class="card-panel-num" />
+            </div> 
+          </div>
+        </el-col>  
+        <el-col :span="6" class="card-panel-col">
+          <div class="card-panel" @click="getListByStatus('A')">
+            <div class="card-panel-icon-wrapper icon-eyeopen">
+              <svg-icon icon-class="eye-open" class-name="card-panel-icon" />
+            </div>
+            <div class="card-panel-description">
+              <div class="card-panel-text">
+                设置
+              </div>
+              <count-to :start-val="0" :end-val="aliveNum" :duration="3200" class="card-panel-num" />
+            </div> 
+          </div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="24">    
+      <el-col :span="6" class="card-panel-col">
         <div class="card-panel" @click="handleAdd">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="question" class-name="card-panel-icon" />
@@ -54,7 +120,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :xs="5" :sm="5" :lg="4" class="card-panel-col">
+      <el-col :span="6" class="card-panel-col">
         <div class="card-panel" @click="handlePractise(0)">
           <div class="card-panel-icon-wrapper icon-money">
             <svg-icon icon-class="skill" class-name="card-panel-icon" />
@@ -67,7 +133,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :xs="5" :sm="5" :lg="4" class="card-panel-col">
+      <el-col :span="6" class="card-panel-col">
         <div class="card-panel" @click="openFight = true">
           <div class="card-panel-icon-wrapper icon-shopping">
             <svg-icon icon-class="wechat" class-name="card-panel-icon" />
@@ -79,17 +145,98 @@
             <count-to :start-val="0" :end-val="challengeNum" :duration="3600" class="card-panel-num" /> 
           </div>
         </div>
+      </el-col> 
+      <el-col :span="6" class="card-panel-col">
+        <div class="card-panel" @click="handleTest">
+          <div class="card-panel-icon-wrapper icon-shopping">
+            <svg-icon icon-class="wechat" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              放松
+            </div>
+            <!-- <count-to :start-val="0" :end-val="challengeNum" :duration="3600" class="card-panel-num" />  -->
+          </div>
+        </div>
+      </el-col>  
+      </el-row>
+
+      <el-row :gutter="24"  style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">  
+            <el-col :xs="24" :sm="24" :lg="24"> 
+              <el-radio-group v-model="showChart">
+                <el-radio-button label="月度目标"></el-radio-button>
+                <el-radio-button label="状态分布"></el-radio-button>
+                <el-radio-button label="应战数据"></el-radio-button>
+                <el-radio-button label="练习统计"></el-radio-button>
+              </el-radio-group>
+              <div class="chart-wrapper"> 
+                    <line-chart :chart-data="lineChartData" v-if="showChart=='月度目标'"/>
+                    <pie-chart :chart-data="pieData"  v-if="showChart=='状态分布'"/>
+                    <bar-chart :chart-data="barData"  v-if="showChart=='应战数据'"/>
+                    <raddar-chart :chart-data="raddarData"  v-if="showChart=='练习统计'"/>
+              </div> 
+            </el-col> 
+      </el-row>
+
+
+      </el-col> 
+
+
+      <el-col :span="10">
+          
+        <el-card   shadow="hover">
+          <div slot="header" class="clearfix">
+            <span>好友动态</span>
+            <el-button style="float: right; padding: 3px 0" type="text"></el-button>
+          </div>
+          <div v-for="friend in friendsDyn" :key="friend" class="text item">
+            <div class="avatar">
+              <el-avatar :src="avater" size="small"></el-avatar>
+              {{friend.nickName  }} 
+            </div>
+            
+            <el-divider direction="vertical"></el-divider>
+            {{friend.createTime}}
+            <el-divider direction="vertical"></el-divider>
+             添加生词 
+             <el-divider direction="vertical"></el-divider>
+
+             <el-tooltip placement="left" effect="light">
+              <div slot="content">
+                <div  v-for="(means,i) in friend.meansList" class="text item"> 
+                    <span><font style="color:green;">{{means.posName}}</font> &nbsp;&nbsp;&nbsp;{{means.means}}  </br></span> 
+                </div>
+              </div>
+              <el-tag>{{friend.word}}</el-tag>
+            </el-tooltip>
+ 
+              <el-divider direction="vertical"></el-divider> 
+
+            <el-tooltip effect="dark" content="添加到我的生词库" placement="top-start"> 
+              <el-button type="primary" size="small" icon="el-icon-plus"  circle > </el-button>
+            </el-tooltip>
+          </div>
+        </el-card>
       </el-col>
+      
     </el-row>
+
+
 
     <el-drawer title="接受挑战"
                   :visible.sync="openFight"
                   direction="rtl"
                   :before-close="closeFight">  
-        <el-button >随机应战</el-button>  
-        <el-button style="margin-bottom:15px;">全部取消</el-button>
-        <br>
-        <el-table ref="fightTable" :data="fightTableData" style="width: 100%">
+
+        <!-- <el-popconfirm confirm-button-text='确定' cancel-button-text='再想想' icon="el-icon-info" icon-color="red"
+                    title="确定要应战全部吗？请做好准备，点确定开始"> -->
+            <el-button type="primary" style="margin-left:10px;" @click="fightAll">应战全部</el-button> 
+        <!-- </el-popconfirm> -->
+
+        <el-button type="warning" :disabled="fightTableData.length<=0" style="margin-bottom:15px;" @click="failAll">举手投降</el-button>
+        <el-divider  content-position="left">待应战总数：{{fightTableData.length}}</el-divider>  
+
+        <el-table ref="fightTable" :data="fightTableData" style="width: 100%"  height="500">
           <el-table-column prop="userId" label="谁挑战我"> </el-table-column>
           <el-table-column prop="word" label="单词" > </el-table-column>
           <el-table-column prop="createTime" label="挑战时间"> </el-table-column>
@@ -102,29 +249,34 @@
         </el-table>
     </el-drawer>
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData" />
-    </el-row>
+
     
-    <br/>
-    <br/>
-    <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart :chart-data="raddarData"/>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart :chart-data="pieData" />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart :chart-data="barData"/>
-        </div>
-      </el-col>
+    <el-row :gutter="24" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <!-- <el-col :xs="24" :sm="24" :lg="24"> 
+             <div class="chart-wrapper"> 
+                  <line-chart :chart-data="lineChartData" />
+              </div> 
+      </el-col> -->
+     <!-- <el-col :xs="12" :sm="12" :lg="12">
+           <div class="chart-wrapper">
+               <pie-chart :chart-data="pieData" />
+             </div>   
+      </el-col> -->
     </el-row>
+
+    <!-- <el-row :gutter="24" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+ 
+      <el-col :xs="24" :sm="24" :lg="12"> 
+             <div class="chart-wrapper">
+                <bar-chart :chart-data="barData"/>
+             </div>  
+      </el-col> 
+      <el-col :xs="24" :sm="24" :lg="12">
+           <div class="chart-wrapper">
+                <raddar-chart :chart-data="raddarData"/>
+             </div>   
+      </el-col>  
+    </el-row> -->
 
 
    <!-- 生词查询列表dialog --> 
@@ -362,65 +514,126 @@
     </el-dialog>
     -->
 
-    <!-- 练习生词对话框 NEW -->
+    <!-- 练习生词对话框 NEW --> 
     <el-dialog :title="titlePractise" 
-               :visible.sync="openPractise" width="850px" append-to-body 
-               :show-close="true" 
+               :visible.sync="openPractise" width="850px" 
+               :show-close="false" 
                @close="closePractise" 
-               class="practiseDialog"> 
+               custom-class="practiseDialog2"> 
+        <!-- <el-divider><i class="el-icon-mobile-phone"></i></el-divider> -->
+
+        <div slot="title" >
+            <div >编辑框</div>
+        </div> 
+   
         <el-row :gutter="24"> 
-          <el-col :span="4" align="middle">               
-             <el-button type="success" style="margin-bottom:15px;" icon="el-icon-check">&nbsp;&nbsp;&nbsp; {{practiseRightTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
-             <el-button type="danger"  style="margin-bottom:15px;margin-left:0px;" icon="el-icon-close">&nbsp;&nbsp;&nbsp; {{practiseWrongTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
-          </el-col>   
-          <el-col :span="10" align="middle"> 
-              <span :style="wordStyle">
-                  {{this.currentWord.word}}
-              </span>   
+           <el-col :span="8" align="left">  
+             <el-button type="success" style="margin-top:8px;" icon="el-icon-check">&nbsp;&nbsp;&nbsp; {{practiseRightTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
+             <el-button type="danger"  style="margin-left:15px;" icon="el-icon-close">&nbsp;&nbsp;&nbsp; {{practiseWrongTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
+        
           </el-col>
-          <el-col :span="4">          
+
+          <el-col :span="8"  :offset="8"  align="right">          
             <!-- <el-badge value="new" class="item">
               <el-button size="small" @click="listUsers">挑战好友</el-button> 
             </el-badge> -->
             <el-popover
                     placement="right" @hide="hidePopover"
-                    width="200"
+                    width="400"
                     trigger="click"
                     v-model="openChallenge">
+
                     <el-form ref="formChellenge" :model="form" :rules="rules" label-width="80px"  @submit.native.prevent>   
              
-                      <el-checkbox-group v-model="form.challengeUserList"  v-for="(means,i) in userList" >
+                      <!-- <el-checkbox-group v-model="form.challengeUserList"  v-for="(means,i) in userList" >
                         <el-checkbox :label="means.friendId" >
                           {{means.userName}}-{{means.nickName}}
                         </el-checkbox>  
-                      </el-checkbox-group> 
-                      <el-input v-model="form.challengePut" placeholder="挑战留言"></el-input>
-                      <el-button size="small" @click="chellengeUser" icon="el-icon-position">发起</el-button>
-                      <el-button size="small" @click="hidePopover" icon="el-icon-s-release">取消</el-button>
+                      </el-checkbox-group>  -->
+                      
+                      <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
+                      <el-input
+                          v-model="userNameForSearch"
+                          placeholder="输入好友名称/昵称回车键搜索"
+                          clearable
+                          size="small" 
+                          @keyup.enter.native="listFriends"
+                          style="margin-bottom:15px;"
+                        />
+                       <el-table
+                          ref="multipleTable"
+                          :data="userList"
+                          tooltip-effect="dark"
+                          style="width: 100%"
+                          @selection-change="handleSelectionChangeChallenge">
+                          <el-table-column
+                            type="selection"
+                            width="55">
+                          </el-table-column>
+                          <el-table-column  label="姓名" > 
+                            <template slot-scope="scope">
+                               <el-tag>{{scope.row.userName}} </el-tag>
+                            </template>
+                          </el-table-column>
+                          <el-table-column  label="昵称" > 
+                            <template slot-scope="scope">
+                               {{scope.row.nickName}}
+                            </template>
+                          </el-table-column>
+                       </el-table>    
+
+
+                      <el-input v-model="form.challengePut" placeholder="挑战留言" style="margin-top:15px;margin-bottom:10px;"></el-input>
+                      <el-button size="small" type="primary" @click="chellengeUser" icon="el-icon-position">发起</el-button>
+                      <el-button size="small" type="info" @click="hidePopover" icon="el-icon-s-release">取消</el-button>
                     </el-form> 
                     <el-button slot="reference" icon="el-icon-share" style="margin-bottom:15px;" @click="listFriends">挑战好友</el-button>
             </el-popover>
 
-            <el-button  @click="closePractise"  icon="el-icon-error" style="margin-bottom:15px;margin-left:0px;" >结束练习</el-button>
+
+            <el-button  @click="closePractise"  icon="el-icon-error" style="margin-left:15px;margin-top:8px;"  >结束练习</el-button>
   
           </el-col>
-          <el-col :span="6"> 
-             <!-- <span v-if="!challengeReplyShow">
-              <el-radio v-model="practiseWordStatus" label="A">存活</el-radio>
-              <el-radio v-model="practiseWordStatus" label="">全部</el-radio>
-             </span> -->
-             <el-progress  :percentage="practiseRatio" type="circle" :width="100" :format="format" class="elprogress"></el-progress>
+    
+        </el-row>  
+
+
+        <el-row :gutter="24"> 
+          <!-- <el-col :span="4" align="middle">  
+             <el-button type="success" style="margin-bottom:15px;" icon="el-icon-check">&nbsp;&nbsp;&nbsp; {{practiseRightTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
+             <el-button type="danger"  style="margin-bottom:15px;margin-left:0px;" icon="el-icon-close">&nbsp;&nbsp;&nbsp; {{practiseWrongTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
+        
+          </el-col>    -->
+          <el-col :span="18" align="middle"> 
+             <el-card  shadow="always" body-style="{ padding: '10px' }">
+              <span :style="wordStyle">
+                  {{this.currentWord.word}}
+              </span>  
+             </el-card>  
+          </el-col>
+  
+          <el-col :span="6" align="right">  
+             <el-progress  :percentage="practiseRatio" type="circle" :width="100" :format="format" class="elprogress"></el-progress> 
           </el-col>
 
         </el-row>
         
-        <el-row :gutter="24" v-if="challengeReplyShow">
-        <el-input placeholder="可以给发起挑战者留言" v-model="challengeReply" >
-          <template slot="prepend">应战回复</template>
-        </el-input>
+        <el-row :gutter="22" v-if="challengeReplyShow">
+          <el-col :span="12">
+            <el-tag effect="plain">挑战者说</el-tag>     {{this.currentWord.challengePut}}
+          </el-col>
+        </el-row>  
+        <el-row  v-if="challengeReplyShow" style="margin-top:5px;">
+          <el-col  > 
+            <!-- <el-tag effect="plain">我的回复</el-tag>   -->
+            <el-input placeholder="我的回复" v-model="challengeReply"  size="15"></el-input> 
+             
+          </el-col>
         </el-row>
 
-        <el-divider content-position="left"><span class="countDown">倒计时：{{countDown}}</span></el-divider>
+        <!-- <el-divider content-position="left"><span class="countDown">倒计时：{{countDown}}</span></el-divider> -->
+        <!-- <el-progress :percentage="100" status="exception"></el-progress> -->
+        <el-progress :percentage="countDownRatio" :status="countDownStatus" ></el-progress>
  
         <el-row :gutter="24">
           <el-col :span="24">
@@ -450,18 +663,16 @@
               
           </el-col> 
         </el-row>
-    </el-dialog>
-
+    </el-dialog> 
     
 
 
     <el-dialog :title="titleTest" 
-            :visible.sync="openTest" width="700px" append-to-body 
-            :show-close="true" 
+            :visible.sync="openTest" width="850px" height="800px" append-to-body 
+            :show-close="false" 
             @close="closePractise" 
-            class="practiseDialog"> 
-          dfqfqefqefwef
-          <iframe src ="/static/test/test.html" id="ifr1" name="ifr1" scrolling="yes"></iframe>
+            class="practiseDialog" custom-class="practiseDialog2">  
+          <iframe src ="/static/jump/index.html" id="ifr1" name="ifr1" scrolling="yes" width="800px" height="500px"></iframe>
     </el-dialog>
 
   </div>
@@ -473,7 +684,7 @@ import LineChart from '@/views/dashboard/LineChart'
 import RaddarChart from '@/views/dashboard/RaddarChart'
 import PieChart from '@/views/dashboard/PieChart'
 import BarChart from '@/views/dashboard/BarChart'
-import { listNewWords, listNewWordsRandom,selectNewWordsCollect,selectExpectActual,selectChallengeCollect,getNewWords, delNewWords, addNewWords, updateNewWords,addChallenge} from "@/api/study/newWords";
+import { listNewWords, listNewWordsRandom,selectNewWordsCollect,selectExpectActual,selectChallengeCollect,getNewWords, delNewWords, addNewWords, updateNewWords,addChallenge,selectFriendsDyn} from "@/api/study/newWords";
 import { listEnglishWords, getEnglishWords, delEnglishWords, addEnglishWords, updateEnglishWords,listEnglishWordsSuggest } from "@/api/study/englishWords";
 import { listNewWordsRecords, getNewWordsRecords, delNewWordsRecords, addNewWordsRecords, updateNewWordsRecords } from "@/api/study/newWordsRecords";
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
@@ -557,7 +768,8 @@ export default {
       queryFriendsParams: {
         userId: null,
         friendId: null,
-        status: null
+        status: null,
+        userName: null,
       },
       // 表单参数
       form: {},
@@ -584,6 +796,8 @@ export default {
       practiseWrongTimes: 0,   //单次练习错误次数
       practiseWordStatus: "A", //练习时查询单词的状态默认存活状态
       countDown: 60, //倒计时
+      countDownRatio: 100,
+      countDownStatus: 'success',
       clock:null,
       autocompleteFocus: true,
       lineChartData: lineChartData.newVisitis,
@@ -605,7 +819,13 @@ export default {
       challengeNum: 0,
       challengeReply: "",
       challengeReplyShow: false,
-      continueFight: false  //是否连续应战（点击连续应战时）
+      continueFight: false,  //是否连续应战（点击连续应战时）
+      multipleSelectionChallenge: [], //选中要挑战的好友数据
+      userNameForSearch: "", //挑战时查询的好友列表
+      avater: this.$store.state.user.avatar,
+      nickName: this.$store.state.user.nick,
+      friendsDyn: [],
+      showChart: "月度目标",
 
     };
   },
@@ -615,6 +835,7 @@ export default {
     this.listNewWordChallenge();
     this.selectExpectActual();
     this.selectChallengeCollect();
+    this.selectFriendsDyn();
   },
   methods: {
     /** 查询生词列表 */
@@ -705,12 +926,23 @@ export default {
         });
     },
 
+    selectFriendsDyn() { 
+      //1.查询好友动态
+      selectFriendsDyn(this.$store.state.user.id).then(response => {  
+          //alert('好友动态列表长度：'+response.rows.length);
+          this.friendsDyn = response.rows;
+      });
+        
+    },
+
     /** 查询挑战统计信息 */
     listNewWordChallenge() { 
       //alert(this.$store.state.user.id);
       this.queryParams.challengeId = this.$store.state.user.id;
       this.queryParams.challengeStatus = "E";
       this.queryParams.userId = null;
+      this.queryParams.id = null;//清空id，应战时会设置这个id，重新加载时不应该有id
+      this.queryParams.status = null;  //不按单词状态去查，如果查询A生存的则会检测是否到预定联系时间、是否达到联系次数等，这里不限制
       listNewWordsRandom(this.queryParams).then(response => {
           //alert(response.rows.length);
           this.fightTableData = response.rows;
@@ -782,6 +1014,8 @@ export default {
     handlePractise(fightId) {
       this.reset(); 
       this.countDown=60;
+      this.countDownRatio = 100;
+      this.countDownStatus = 'success';
       this.currentWord = {};
       this.suggestWords = [];
       this.openPractise = true;
@@ -796,12 +1030,14 @@ export default {
         this.queryParams.challengeId = this.$store.state.user.id;
         this.queryParams.challengeStatus = "E";
         this.queryParams.userId = null;
+        this.queryParams.status = null;  //不按单词状态去查，如果查询A生存的则会检测是否到预定联系时间、是否达到联系次数等，这里不限制
         this.challengeReplyShow = true;
       }else{
         this.queryParams.id = null;
         this.queryParams.challengeId = null;
         this.queryParams.challengeStatus = '';
         this.queryParams.userId = this.$store.state.user.id;
+        this.queryParams.status = 'A';
         this.challengeReplyShow = false;
       }
 
@@ -825,6 +1061,13 @@ export default {
                 //alert(this.countDown);
                 if(!this.suspend){
                     this.countDown--;
+                    this.countDownRatio = Math.floor(this.countDown/60*100);
+                    //console.log(this.countDownRatio);
+                    if(this.countDownRatio <= 40){ 
+                       this.countDownStatus = 'exception';
+                    }else if(this.countDownRatio <= 70){
+                       this.countDownStatus = 'warning';
+                    }
                 } 
                 if (this.countDown <= 1) {
                   window.clearInterval(this.clock);
@@ -902,19 +1145,22 @@ export default {
         //再次加载生词【下面是vue的settimeout的正确用法，否则间隔时间不生效】
         if(this.queryParams.id != null){
             for(var index in this.fightTableData){ 
-                this.fightTableData[index].id = this.queryParams.id;
-                this.fightTableData.splice(index,1);
-                index--;
+                if(this.fightTableData[index].id == this.queryParams.id){
+                    //alert("找到当前已答index:"+index);
+                    this.fightTableData.splice(index,1);
+                    index--;
+                }
+                
             } 
             //alert("剩余挑战长度："+this.fightTableData.length);
             //如果还有应战单词且选择了”连续应战“
             if(this.fightTableData.length>0 && this.continueFight){
                setTimeout(() => {
-                  this.handlePractise(fightTableData[0].id);
+                  this.handlePractise(this.fightTableData[0].id);
                },500);
             }else{
               this.closePractise();
-              this.created();
+              //this.created();
             }
         }else{ //否则走正常的单词练习
             setTimeout(() => {
@@ -930,11 +1176,12 @@ export default {
       this.practiseRightTimes = 0;  //单次练习正确次数
       this.practiseWrongTimes = 0;   //单次练习错误次数
       this.openPractise = false;
+      this.continueFight = false;
       this.getList();
       this.getNewWordCollect();
       this.listNewWordChallenge();
       if(this.clock){  
-            window.clearInterval(this.clock);
+         window.clearInterval(this.clock);
       } 
     },
 
@@ -1134,9 +1381,14 @@ export default {
       );
     },
 
+    handleSearchFriendForEnter() {
+       
+    },
+
     listFriends(){ 
       this.queryFriendsParams.userId = this.$store.state.user.id;
       this.queryFriendsParams.status = 'S'; 
+      this.queryFriendsParams.userName = this.userNameForSearch;
       listFriendsTwoWay(this.queryFriendsParams).then(response => {
           this.userList = response.rows; 
           this.openChallenge = true;
@@ -1163,14 +1415,17 @@ export default {
     },
  
     chellengeUser() {
+      //alert(this.multipleSelectionChallenge);
+      //return;
       this.form.wordId = this.currentWord.wordId;
       this.$refs["formChellenge"].validate(valid => {
         if (valid) {  
             addChallenge(this.form).then(response => {
               if (response.code === 200) {
                 this.msgSuccess("挑战成功");
-                this.openChallenge = false;  
+                //this.openChallenge = false;  
                 this.suspend = false;
+                this.$refs.multipleTable.clearSelection();
               }
             });
           } 
@@ -1180,6 +1435,8 @@ export default {
     hidePopover() {
       //alert("hide");
       this.suspend = false;
+      this.openChallenge = false;
+      this.$refs.multipleTable.clearSelection();
     },
     closeFight() {
       this.openFight = false;
@@ -1188,6 +1445,18 @@ export default {
       //alert(id);
       this.handlePractise(id);
     },
+    fightAll(){
+      if(this.fightTableData.length<=0){
+          this.msgError("没有可应战的生词！");
+      }  
+      this.continueFight = true;
+      this.handlePractise(this.fightTableData[0].id); 
+    },
+
+    failAll() {
+      alert("头像");  
+    },
+
 
     getListByStatus(status) {
       this.queryParams.word = '';
@@ -1221,6 +1490,11 @@ export default {
         
         return msg;
     },
+
+    handleSelectionChangeChallenge(val) {
+       this.multipleSelectionChallenge = val;
+       this.form.challengeUserList = this.multipleSelectionChallenge;
+    }
 
   },
 
@@ -1302,11 +1576,11 @@ export default {
   
 
   .panel-group {
-  margin-top: 18px;
+    margin-top: 18px;
 
-  .card-panel-col {
-    margin-bottom: 32px;
-  }
+    .card-panel-col {
+      margin-bottom: 32px;
+    }
 
   .card-panel {
     height: 108px;
@@ -1435,7 +1709,87 @@ export default {
     padding: 8px;
   }
 
+}
+
+
+
+
+  /deep/ .el-dialog.practiseDialog2{
+    border-radius: 2px;
+    margin-bottom: 0;
+    margin-top: 4vh !important;
+    display: flex;
+    flex-direction: column; 
+    overflow: hidden;
+    box-sizing: border-box;
+    .el-dialog__header {
+      background: #1e4b5f;
+      padding-top: 15px;
+    }
+    .el-dialog__body {
+      margin: 0 20px 20px 20px;
+      padding: 0;
+      overflow: no;
+    }
+  }
+
+  .page-header-content {
+    display: flex;
+
+    .avatar {
+       flex: 0 1 72px;
+       & > span {
+         display: block;
+         width: 72px;
+         height: 72px;
+         border-radius: 72px;
+       }
+    }
+
+    .content {
+      position: relative;
+      top: 14px;
+      flex: 1 1 auto;
+      margin-left: 24px;
+      color: #a7abbd;
+      line-height: 10px;
+      font-size: 10px;
+
+      .content-title {
+        margin-bottom: 12px;
+        color:black;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 28px;
+      }
+    }
+
+  } 
+
+
+  .info-title {
+        margin-bottom: 6px;
+        color:black;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+  }
+
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 18px;
+    opacity: 0.75;
+    line-height: 300px;
+    margin: 0;
+  }
+  
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+  
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
+  }  
     
  
-}
 </style>

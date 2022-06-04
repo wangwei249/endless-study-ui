@@ -89,9 +89,11 @@
     <!-- 添加好友对话框 -->
     <el-dialog :title="titleAddFriend" 
                :visible.sync="openAddFriend" width="350px" append-to-body 
-               :show-close="true"  > 
-        <span v-if="currentFriendStatusTip != ''" style="color:green;margin-bottom:5px;">{{currentFriendStatusTip}}</span> 
-        <el-input v-model="userNameForSearch" placeholder="请输入用户名" @keyup.enter.native="searchUser"></el-input>       
+               :show-close="true" >  
+                
+        <span v-if="currentFriendStatusTip != ''" style="color:green;margin-bottom:15px;">{{currentFriendStatusTip}}</span> 
+        <el-input v-model="userNameForSearch" placeholder="请输入用户名" @keyup.enter.native="searchUser"></el-input>   
+        <el-divider></el-divider>     
         <el-table ref="friendTable" :data="friendTableData" style="width: 100%">
           <el-table-column prop="userId" label="用户ID"> </el-table-column>
           <el-table-column prop="userName" label="用户名" > </el-table-column> 
@@ -530,116 +532,4 @@ export default {
   }
 }
 
-
-.panel-group {
-  margin-top: 18px;
-
-  .card-panel-col {
-    margin-bottom: 32px;
-  }
-
-  .card-panel {
-    height: 108px;
-    cursor: pointer;
-    font-size: 12px;
-    position: relative;
-    overflow: hidden;
-    color: #666;
-    background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
-
-    &:hover {
-      .card-panel-icon-wrapper {
-        color: #fff;
-      }
-
-      .icon-people {
-        background: #40c9c6;
-      }
-
-      .icon-eye {
-        background: #f1da07;
-      }
-
-      .icon-eyeopen {
-        background: #0ce90c;
-      }
-
-      .icon-message {
-        background: #36a3f7;
-      }
-
-      .icon-money {
-        background: #f4516c;
-      }
-
-      .icon-shopping {
-        background: #34bfa3
-      }
-    }
-
-
-    .icon-eye {
-      color: #f1da07;
-    }
-
-    .icon-eyeopen {
-      color: #0ce90c;
-    }
-
-    .icon-people {
-      color: #40c9c6;
-    }
-
-    .icon-message {
-      color: #36a3f7;
-    }
-
-    .icon-money {
-      color: #f4516c;
-    }
-
-    .icon-shopping {
-      color: #34bfa3
-    }
-
-    .card-panel-icon-wrapper {
-      float: left;
-      margin: 14px 0 0 14px;
-      padding: 16px;
-      transition: all 0.38s ease-out;
-      border-radius: 6px;
-    }
-
-    .card-panel-icon {
-      float: left;
-      font-size: 48px;
-    }
-
-    .card-panel-description {
-      float: right;
-      font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
-
-      .card-panel-text {
-        line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
-        margin-bottom: 12px;
-      }
-
-      .card-panel-num {
-        font-size: 20px;
-      }
-    }
-  }
-
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
-  }
-}
 </style>
