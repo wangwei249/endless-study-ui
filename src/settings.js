@@ -1,5 +1,5 @@
 module.exports = {
-  title: '吉想敏捷开发框架',
+  title: '无止境的学习',
 
   /**
    * 是否系统布局配置

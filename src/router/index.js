@@ -53,12 +53,17 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/toResetPwd',
+    component: (resolve) => require(['@/views/resetPwd'], resolve),
+    hidden: true
+  },
+  {
     path: '',
     component: Layout,
-    redirect: 'study',
+    redirect: 'index',
     children: [
       {
-        path: 'study',
+        path: 'index',
         // component: (resolve) => require(['@/views/index'], resolve),  //默认转向首页，带菜单
         // name: '首页',
         component: (resolve) => require(['@/views/study/newWords'], resolve),  //直接转向生词首页
@@ -123,6 +128,7 @@ export const constantRoutes = [
 ]
 
 export default new Router({
+  base: '/study',  //本机不带'/study'，正式带20220702
   mode: 'history', // 去掉url中的#
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes

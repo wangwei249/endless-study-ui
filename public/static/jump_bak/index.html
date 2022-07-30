@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover' />
+    <meta charset='utf-8'>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <style></style>
+    <title>Cube Jump</title>
+    <script src="playcanvas-stable.min.js"></script>
+    <script src="__settings__.js"></script>
+</head>
+<body>
+    <script src="__start__.js"></script>
+    <script src="__loading__.js"></script>
+    <script>
+        var score = window.location.href.split('=')[1];
+        var app = pc.Application.getApplication();
+        alert(app);
+        app.fire("score:set", score);
+        app.on("start", function () {
+            // get the root of the scene.
+            var hierarchy = app.root.getChildren()[0];
+    
+            // do other stuff here
+        });
+   </script>
+</body>
+</html>

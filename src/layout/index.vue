@@ -2,7 +2,9 @@
   <div :class="classObj" class="app-wrapper" >
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" v-if="userName == 'admin'"/>
-    <div :class="{hasTagsView:needTagsView}" class="main-container">
+
+    <!-- 管理员有左边菜单的 -->
+    <div :class="{hasTagsView:needTagsView}" class="main-container"  v-if="userName == 'admin'">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar v-if="userName == 'admin'"/>
         <tags-view v-if="needTagsView && userName == 'admin'" />
@@ -12,6 +14,20 @@
         <settings />
       </right-panel>
     </div>
+
+    <!-- 普通用户无左边菜单 -->
+    <div :class="{hasTagsView:needTagsView}" class="main-container-nomemu"  v-if="userName != 'admin'">
+      <div :class="{'fixed-header':fixedHeader}">
+        <navbar v-if="userName == 'admin'"/>
+        <tags-view v-if="needTagsView && userName == 'admin'" />
+      </div>
+      <app-main />
+      <right-panel v-if="showSettings">
+        <settings />
+      </right-panel>
+    </div>
+
+
   </div>
  
 
@@ -37,7 +53,7 @@ export default {
   },
   data() {
     return {
-       userName: this.$store.state.user.name,
+       userName: this.$store.state.user.name, 
     }
   },
 
@@ -66,7 +82,7 @@ export default {
   },
 
   created() {
-    //alert(this.userName);
+    //alert(this.userName); 
   }
 }
 </script>
@@ -113,4 +129,5 @@ export default {
   .mobile .fixed-header {
     width: 100%;
   }
+ 
 </style>

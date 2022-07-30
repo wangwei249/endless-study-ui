@@ -38,9 +38,61 @@ export function logout() {
 }
 
 // 获取验证码
-export function getCodeImg() {
+export function getCodeImg(codeType) {
   return request({
-    url: '/code',
+    url: '/code?codeType='+codeType,
+    method: 'get' 
+  })
+}
+
+
+// 注册用户
+export function register(data) {
+  //alert('regitser');
+  return request({
+    url: '/auth/register',
+    method: 'post',
+    data: data
+  })
+}
+
+
+// 检测微信扫码后台是否完成token
+export function checkIsWxMapLogin(uuid) {
+  //alert('checkIsSanLogin');
+  return request({
+    url: '/auth/checkIsWxMapLogin/'+uuid,
     method: 'get'
   })
 }
+
+
+// 密码重置邮件发送
+export function resetPwdEmail(data) {
+  //alert('resetPwdEmail');
+  return request({
+    url: '/auth/resetPwdEmail',
+    method: 'post',
+    data: data
+  })
+}
+
+
+// 密码重置
+export function resetPwd(data) {
+  //alert('resetPwdEmail');
+  return request({
+    url: '/auth/resetPwd',
+    method: 'post',
+    data: data
+  })
+}
+
+// 注册用户
+// export function loginWeixin(uuid) {
+//   //alert('loginWeixin');
+//   return request({
+//     url: '/auth/checkIsSanLogin/'+uuid,
+//     method: 'get'
+//   })
+// }

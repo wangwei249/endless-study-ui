@@ -267,7 +267,8 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+          //location.href = '/index';
+          location.href = this.$router.options.base+'/index';   //如果部署到nginx非根节点，如study，则此处需加上前置study，本机不需要
         })
       })
     },

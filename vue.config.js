@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-const name = defaultSettings.title || '吉想敏捷开发框架' // 标题
+const name = defaultSettings.title || '恩德莱斯信息统计' // 标题
 
 const port = process.env.port || process.env.npm_config_port || 80 // 端口
 
@@ -35,8 +35,8 @@ module.exports = {
       // detail: https://cli.vuejs.org/config/#devserver-proxy
       [process.env.VUE_APP_BASE_API]: {
         //target: `http://175.24.126.137:8088`,
-        //target: `http://localhost:8088`,
-        target: `http://192.168.116.128:8088`,
+        target: `http://localhost:8088`,      //本机 
+        //target: `http://192.168.116.128:8088`,  //虚拟机  
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''

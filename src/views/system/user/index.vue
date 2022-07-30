@@ -339,6 +339,7 @@
 
 <script>
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
+import { addUserDefaultSetting} from "@/api/study/newWords";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -603,11 +604,25 @@ export default {
           } else {
             addUser(this.form).then(response => {
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
+                alert(response.data);
+                this.form.userId = response.data;
+                //this.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
+
+                //创建新用户生词系统相关的默认数据 230220612
+                addUserDefaultSetting(this.form.userId).then(response => {
+                  if (response.code === 200) {
+                    this.msgSuccess("新增成功"); 
+                    this.getList();   
+                  }
+                });
+
               }
             });
+
+            
+
           }
         }
       });

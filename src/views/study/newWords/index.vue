@@ -1,41 +1,48 @@
 <template>
-  <div>
+  <div class = "newWordStyle" >
 
-      <el-row :gutter="24" style="margin-top:0px;margin-bottom:6px;padding-left:10px;"> 
+      <el-row :gutter="24" style="{margin-top:3px;margin-bottom:6px;margin-left:30px;margin-right:30px; }"> 
          <el-card :body-style="{ padding: '0px'}" >
            <div class="page-header-content">
               <div class="avatar">
-                <el-avatar :src="avater" size="large"></el-avatar>
+                <el-avatar :src="avater" size="large"></el-avatar> 
               </div>  
               <div class="content">
                 <div class="content-title"> 
                    {{nickName}}
                 </div>
-                <div>前端工程师 | 蚂蚁金服 - 某某某事业群</div>
+                <span> {{this.gradeDesc}}  |  {{deptname}}  |  </span>
+                <span> 会员有效期： {{validTo}} </span>  
+                <span v-if="outDateFlag"><font color="red">已过期</font></span>
+                <!-- <span><a href="javascript:void(0);" @click="toPay()"><font color="green">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;续费</font></a> </span> -->
               </div>
            
 
 
              <div style="margin-top:17px;">  
-                 <el-badge  value="" class="item"  type="warning">
-                  <el-button size="small"   icon="el-icon-edit" circle></el-button>
-                </el-badge>
+                <el-tooltip class="item" effect="dark" content="添加好友" placement="top-start"> 
+                  <el-badge  value="" class="item"  type="warning">
+                    <el-button size="small"   icon="el-icon-zoom-in" circle @click="addFriend"></el-button>
+                  </el-badge>
+                </el-tooltip>
              </div> 
              <div style="margin-top:17px;"> 
                <el-tooltip class="item" effect="dark" content="新的朋友审核" placement="top-start">    
-                <el-badge :value="2" class="item" type="success">
-                  <el-button size="small"  icon="el-icon-chat-dot-round" circle ></el-button>
+                <el-badge :value="checkFriendTableData.length==0?'':checkFriendTableData.length" class="item" type="success">
+                  <el-button size="small"  icon="el-icon-chat-dot-round" circle @click="checkFriend"></el-button>
                 </el-badge>
                 </el-tooltip>
              </div> 
              <div style="margin-top:17px;"> 
-                <el-badge  value="" class="item" type="info">
-                  <el-button size="small"  icon="el-icon-user" circle ></el-button>
+               <el-tooltip class="item" effect="dark" content="个人设置" placement="top-start"> 
+                <el-badge  value="" class="item" type="info"> 
+                    <el-button size="small"  icon="el-icon-user" circle @click="toUserProfile()"></el-button> 
                 </el-badge>
+               </el-tooltip>
              </div> 
              <div style="margin-top:17px;margin-right:17px;"> 
                 <el-badge  value="" class="item" type="info">
-                  <el-button size="small" type="warning" icon="el-icon-switch-button" circle></el-button>
+                  <el-button size="small" type="warning" icon="el-icon-switch-button" @click="logout"  circle></el-button>
                 </el-badge>
              </div> 
         </div>
@@ -46,7 +53,7 @@
     </el-row>  
  
 
-    <el-row :gutter="24" class="panel-group">
+    <el-row :gutter="24" class="panel-group"  style="margin-top:0px;margin-bottom:6px;margin-left:20px;margin-right:20px">
     
       <el-col :span="14"> 
 
@@ -92,21 +99,22 @@
           </div>
         </el-col>  
         <el-col :span="6" class="card-panel-col">
-          <div class="card-panel" @click="getListByStatus('A')">
-            <div class="card-panel-icon-wrapper icon-eyeopen">
-              <svg-icon icon-class="eye-open" class-name="card-panel-icon" />
+          <div class="card-panel" @click="newWordSetting">
+            <div class="card-panel-icon-wrapper icon-money">
+              <svg-icon icon-class="tool" class-name="card-panel-icon" />
             </div>
             <div class="card-panel-description">
               <div class="card-panel-text">
                 设置
               </div>
-              <count-to :start-val="0" :end-val="aliveNum" :duration="3200" class="card-panel-num" />
+              <!-- <count-to :start-val="0" :end-val="aliveNum" :duration="3200" class="card-panel-num" /> -->
+              <!-- 生词设置 -->
             </div> 
           </div>
         </el-col>
       </el-row>
       <el-row :gutter="24">    
-      <el-col :span="6" class="card-panel-col">
+      <el-col :span="4" class="card-panel-col">
         <div class="card-panel" @click="handleAdd">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="question" class-name="card-panel-icon" />
@@ -117,11 +125,12 @@
               <!-- <a href="http://www.baidu.com/"><input type="button" value='百度'></a> -->
             </div>
             <!-- <count-to :start-val="0" :end-val="10" :duration="3000" class="card-panel-num" /> -->
+            <!-- 收集生词 -->
           </div>
         </div>
       </el-col>
-      <el-col :span="6" class="card-panel-col">
-        <div class="card-panel" @click="handlePractise(0)">
+      <el-col :span="4" class="card-panel-col">
+        <div class="card-panel" @click="handlePractise2('english')">
           <div class="card-panel-icon-wrapper icon-money">
             <svg-icon icon-class="skill" class-name="card-panel-icon" />
           </div>
@@ -133,7 +142,34 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="6" class="card-panel-col">
+      <el-col :span="4" class="card-panel-col">
+        <div class="card-panel" @click="handlePractise2('means')">
+          <div class="card-panel-icon-wrapper icon-money">
+            <svg-icon icon-class="skill" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              练习(2)
+            </div>
+            <count-to :start-val="0" :end-val="practiseNum" :duration="3200" class="card-panel-num" />
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="4" class="card-panel-col">
+        <div class="card-panel" @click="handlePractise2('lisen')">
+          <div class="card-panel-icon-wrapper icon-money">
+            <svg-icon icon-class="skill" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              练习(3)
+            </div>
+            <count-to :start-val="0" :end-val="practiseNum" :duration="3200" class="card-panel-num" />
+          </div>
+        </div>
+      </el-col>
+
+      <el-col :span="4" class="card-panel-col">
         <div class="card-panel" @click="openFight = true">
           <div class="card-panel-icon-wrapper icon-shopping">
             <svg-icon icon-class="wechat" class-name="card-panel-icon" />
@@ -146,10 +182,10 @@
           </div>
         </div>
       </el-col> 
-      <el-col :span="6" class="card-panel-col">
+      <el-col :span="4" class="card-panel-col">
         <div class="card-panel" @click="handleTest">
           <div class="card-panel-icon-wrapper icon-shopping">
-            <svg-icon icon-class="wechat" class-name="card-panel-icon" />
+            <svg-icon icon-class="color" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">
@@ -182,47 +218,96 @@
       </el-col> 
 
 
-      <el-col :span="10">
-          
-        <el-card   shadow="hover">
+      <el-col :span="10" style="">
+
+        
+        <!-- 热门词汇 -->
+        <el-card   shadow="hover"  style="margin-bottom:10px;height:50%;" >
           <div slot="header" class="clearfix">
-            <span>好友动态</span>
+            <span>热门词汇</span>
             <el-button style="float: right; padding: 3px 0" type="text"></el-button>
           </div>
-          <div v-for="friend in friendsDyn" :key="friend" class="text item">
-            <div class="avatar">
-              <el-avatar :src="avater" size="small"></el-avatar>
-              {{friend.nickName  }} 
+          <div style="float:left;"  v-for="hotWord in hotWordsData"  class="text item" >
+            <div>
+                <el-tooltip placement="left" effect="light">
+                  <div slot="content">
+                    <div  v-for="(means,i) in hotWord.meansList" class="text item"> 
+                        <span><font style="color:green;">{{means.posName}}</font> &nbsp;&nbsp;&nbsp;{{means.means}}  </br></span> 
+                    </div>
+                  </div>
+                  <el-tag effect="dark" :type="tagType[hotWord.wordId%4]"  @click="addToMe(hotWord)">{{hotWord.word}}</el-tag>
+                </el-tooltip>
             </div>
-            
-            <el-divider direction="vertical"></el-divider>
-            {{friend.createTime}}
-            <el-divider direction="vertical"></el-divider>
-             添加生词 
-             <el-divider direction="vertical"></el-divider>
+          </div>
+        </el-card>    
 
-             <el-tooltip placement="left" effect="light">
-              <div slot="content">
-                <div  v-for="(means,i) in friend.meansList" class="text item"> 
-                    <span><font style="color:green;">{{means.posName}}</font> &nbsp;&nbsp;&nbsp;{{means.means}}  </br></span> 
+        <!-- 好友动态 -->  
+        <el-card   shadow="hover" style="height:50%;">
+          <div slot="header" class="clearfix">
+            <span>好友动态 【<el-button style="float: center; padding: 3px 0" type="text" @click="selectRank()">排行版</el-button>】</span>
+            
+          </div>
+          <div v-for="friend in friendsDyn" class="text item" v-if="friendsDyn.length>0">
+     
+            <el-card :body-style="{ padding: '5px' }">
+              <!-- <div class="avatar" style="float:left"> -->
+                <!-- <el-avatar :src="avater" size="small"></el-avatar> -->
+                <b style="margin-right:20px;margin-left:10px;">{{friend.nickName}} </b>
+              
+              
+              <!-- <el-divider direction="vertical"></el-divider> -->
+              <time class="time">{{friend.createTime}}</time>
+              <el-divider direction="vertical"></el-divider>
+              <span style="margin-right:20px;margin-left:20px;">添加生词 </span>
+              <!-- <el-divider direction="vertical"></el-divider> -->
+
+              <el-tooltip placement="left" effect="light">
+                <div slot="content">
+                  <div  v-for="(means,i) in friend.meansList" class="text item"> 
+                      <span><font style="color:green;">{{means.posName}}</font> &nbsp;&nbsp;&nbsp;{{means.means}}  </br></span> 
+                  </div>
                 </div>
-              </div>
-              <el-tag>{{friend.word}}</el-tag>
-            </el-tooltip>
- 
+                <el-tag>{{friend.word}}</el-tag>
+              </el-tooltip>
+  
               <el-divider direction="vertical"></el-divider> 
 
-            <el-tooltip effect="dark" content="添加到我的生词库" placement="top-start"> 
-              <el-button type="primary" size="small" icon="el-icon-plus"  circle > </el-button>
-            </el-tooltip>
+              <el-tooltip effect="dark" content="添加到我的生词库" placement="top-start"> 
+                <el-button type="primary" size="small" icon="el-icon-plus"  circle @click = "addToMe(friend)"> </el-button>
+              </el-tooltip> 
+
+              <!-- </div> -->
+            </el-card> 
+
+          </div>
+
+          <div v-for="index of 5"  class="text item" v-if="friendsDyn.length == 0">
+     
+            <el-card :body-style="{ padding: '15px' }">
+                暂无动态
+            </el-card> 
+
           </div>
         </el-card>
+
+
+
       </el-col>
       
     </el-row>
 
+        
+    <div>
+     <el-divider></el-divider>
+     <span  style="text-align: center;display:block;font-size:14px"><a href="https://beian.miit.gov.cn/">豫ICP备2022013318号-1</a>&nbsp;&nbsp;&nbsp;&nbsp;www.endlessly.cn </span><br/>
+     <span  style="text-align: center;display:block;font-size:10px">版权所有 2022-2025 </span>
+     
+    </div>
 
 
+
+ 
+    <!-- 接受挑战 -->
     <el-drawer title="接受挑战"
                   :visible.sync="openFight"
                   direction="rtl"
@@ -236,8 +321,9 @@
         <el-button type="warning" :disabled="fightTableData.length<=0" style="margin-bottom:15px;" @click="failAll">举手投降</el-button>
         <el-divider  content-position="left">待应战总数：{{fightTableData.length}}</el-divider>  
 
-        <el-table ref="fightTable" :data="fightTableData" style="width: 100%"  height="500">
-          <el-table-column prop="userId" label="谁挑战我"> </el-table-column>
+        <el-table ref="fightTable" :data="fightTableData" style="width: 100%"  height="550">
+          <el-table-column prop="userName" label="发起挑战者"> </el-table-column>
+          <el-table-column prop="nickName" label="挑战者昵称"> </el-table-column>
           <el-table-column prop="word" label="单词" > </el-table-column>
           <el-table-column prop="createTime" label="挑战时间"> </el-table-column>
           <el-table-column prop="" label="处理" >
@@ -250,33 +336,7 @@
     </el-drawer>
 
 
-    
-    <el-row :gutter="24" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <!-- <el-col :xs="24" :sm="24" :lg="24"> 
-             <div class="chart-wrapper"> 
-                  <line-chart :chart-data="lineChartData" />
-              </div> 
-      </el-col> -->
-     <!-- <el-col :xs="12" :sm="12" :lg="12">
-           <div class="chart-wrapper">
-               <pie-chart :chart-data="pieData" />
-             </div>   
-      </el-col> -->
-    </el-row>
-
-    <!-- <el-row :gutter="24" style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
- 
-      <el-col :xs="24" :sm="24" :lg="12"> 
-             <div class="chart-wrapper">
-                <bar-chart :chart-data="barData"/>
-             </div>  
-      </el-col> 
-      <el-col :xs="24" :sm="24" :lg="12">
-           <div class="chart-wrapper">
-                <raddar-chart :chart-data="raddarData"/>
-             </div>   
-      </el-col>  
-    </el-row> -->
+   
 
 
    <!-- 生词查询列表dialog --> 
@@ -293,12 +353,21 @@
       </el-form-item>
       <el-form-item label="生词状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择生词状态" clearable size="small">
-          <el-option label="请选择字典生成" value="" />
+          <el-option label="全部" value="" />
+          <el-option label="存活" value="A" />
+          <el-option label="消灭" value="D" />
         </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="cyan" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button
+              type="warning"
+              icon="el-icon-download"
+              size="mini"
+              @click="handleExport"
+              v-hasPermi="['system:user:export']"
+            >导出</el-button>
       </el-form-item>
     </el-form>
  
@@ -397,285 +466,237 @@
     </el-dialog>
 
 
-    <!-- 添加生词对话框 -->
-    <el-dialog :title="title"  :visible.sync="open" width="500px" append-to-body> 
-    
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px"  @submit.native.prevent> 
-       <el-form-item label="请输入生词" label-width="130px"> 
-        <el-autocomplete 
-            class="inline-input"
-              v-model="form.word"
-              :fetch-suggestions="querySuggest"
-              placeholder="请输入内容"
-              @select="handleSelect"
-              @keyup.enter.native="handleSelectForEnter"
-              value-key="word" 
-              ref="autocomplete"
-            ></el-autocomplete> 
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <span v-if="addButtonTip != ''"><el-tag type="danger">已存在</el-tag></span>
-       </el-form-item>
-
-       <el-card class="box-card2" v-if="this.currentWord.voice">
-          <div slot="header" class="clearfix">
-            <el-tag>读音</el-tag> 
-          </div>
-          <span v-for="(value,key,index) in this.currentWord.voice"  class="text item">  
-              <!--英语发音-->
-              <span v-if="value && key == 'ph_en'">
-                <!-- <el-tag size="small"></el-tag> -->
-                英[{{value}} ] 
-              </span>  
-              <!--英语读音-->
-              <span v-if="value && key == 'ph_en_mp3'">
-                <!-- <img src="@/assets/image/sounds.jpg" width="40px" height="40px" @click="playSound(value)"/> -->
-                <i class="el-icon-headset" @click="playSound()"></i>
-                <audio controls="controls" class="audioClass"  hidden 
-                  :src="value"  
-                  ref="audio"></audio> 
-              </span> 
-          
-          </span> 
-       </el-card>
-
-       <el-card class="box-card2" v-if="this.currentWord.exchange">
-          <div slot="header" class="clearfix">
-            <el-tag>含义</el-tag> 
-          </div>
-          <div  v-for="(means,i) in this.currentWord.meansList" class="text item"> 
-              <span><font style="color:green;">{{means.posName}}</font> &nbsp;&nbsp;&nbsp;{{means.means}}  </br></span>
-              <!-- <span v-if="i == this.currentWord.meansList.length-1" ><font style="color:green;">{{means.posName}}</font> &nbsp;&nbsp;&nbsp;{{means.means}} </span> -->
-          </div> 
-       </el-card>
-
-       <el-card class="box-card2" v-if="this.currentWord.exchange">
-          <div slot="header" class="clearfix">
-            <el-tag>转换</el-tag> 
-          </div>
-          <span v-for="(value,key,index) in this.currentWord.exchange"  class="text item"> 
-              <span v-if="value && key == 'word_third'">
-                第三人称单数:{{value}}  &nbsp;
-              </span> 
-              <span v-if="value && key == 'word_ing'">
-                现在分词:{{value}}  &nbsp;
-              </span>
-              <span v-if="value && key == 'word_past'">
-                过去式:{{value}}  &nbsp;
-              </span>
-              <span v-if="value && key == 'word_done'">
-                过去分词:{{value}}  &nbsp;
-              </span>
-              
-              
-          </span> 
-       </el-card>
-  
-      </el-form> 
-      <div slot="footer" class="dialog-footer">  
-        <el-button type="primary" @click="submitForm" :disabled="addButtonDisabled">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
+    <!-- 添加生词对话框 --> 
+    <AddNewWord  ref="AddNewWord" :openAdd="showOpenAdd"></AddNewWord> 
 
 
-
-
-    <!-- 练习生词对话框 
-    <el-dialog :title="titlePractise" :visible.sync="openPractise" width="700px" append-to-body :show-close="false">
-  
-      <el-row :gutter="20" class="mb8"> 
-        <el-col :span="15">    
-          <el-badge value="new" class="item">
-            <el-button size="small">挑战好友</el-button>
-          </el-badge>
-          <el-badge value="hot" class="item" >
-            <el-button size="small" @click="closePractise">结束练习</el-button>
-          </el-badge> 
-       </el-col>   
-      </el-row>
  
-      <el-row :gutter="20" class="mb8"> 
-          <span :style="wordStyle">
-                {{this.currentWord.word}}
-          </span>    
-          <el-progress  :percentage="practiseRatio" width="80" :format="format" class="elprogress"></el-progress>
-          
-          <el-card class="box-card">
-            <div v-for="(item, index) in this.suggestWords" :key="index"> 
-              <el-button :type="item.result" round  style="text-align: left;margin-top: 2px" @click="checkAnswer(item,index)"> 
-                  <span style="margin-left: 2px" v-for="means in item.meansList" > 
-                      <el-tag size="small" effect="plain">{{means.posName}}</el-tag> &nbsp;&nbsp;&nbsp;{{means.means}}  </br></br>
-                  </span> 
-                </el-button> 
+    <!-- 练习生词对话框 NEW 已单独备份 -->  
+    <PractiseNewWord2  ref="PractiseNewWord2" :openPractise2="showPractise2" :practiseType="practiseType"></PractiseNewWord2> 
+
+
+
+    <!-- 添加好友对话框 -->
+    <el-dialog :title="titleAddFriend" 
+               :visible.sync="openAddFriend" width="350px" append-to-body 
+               :show-close="true" >  
                 
-            </div>
-          </el-card>
-      </el-row> 
+        <span v-if="currentFriendStatusTip != ''" style="color:green;margin-bottom:15px;">{{currentFriendStatusTip}}</span> 
+        <el-input v-model="userNameForSearch" placeholder="请输入用户名" @keyup.enter.native="searchUser"></el-input>   
+        <el-divider></el-divider>     
+        <el-table ref="friendTable" :data="friendTableData" style="width: 100%">
+          <el-table-column prop="userName" label="登录名"> </el-table-column> 
+          <el-table-column prop="nickName" label="用户昵称"> </el-table-column> 
+          <el-table-column prop="" label="处理" >
+            <template slot-scope="scope"> 
+                <el-button type="success" :disabled="currentFriendStatus == 'S' || currentFriendStatus == 'N' " 
+                  disable-transitions @click="addFriendLast(scope.row.userId)">添加
+                </el-button>
+            </template>
+          </el-table-column>
+        </el-table>         
+         
     </el-dialog>
-    -->
 
-    <!-- 练习生词对话框 NEW --> 
-    <el-dialog :title="titlePractise" 
-               :visible.sync="openPractise" width="850px" 
-               :show-close="false" 
-               @close="closePractise" 
-               custom-class="practiseDialog2"> 
-        <!-- <el-divider><i class="el-icon-mobile-phone"></i></el-divider> -->
+    <!-- 审核好友申请对话框 -->
+    <el-dialog :title="titleAddFriend" 
+               :visible.sync="openCheckFriend" width="550px" append-to-body 
+               :show-close="true"  >       
+        <el-table ref="checkFriendTable" :data="checkFriendTableData" style="width: 100%">
+          <el-table-column prop="fuserName" label="登录名"> </el-table-column> 
+          <el-table-column prop="fnickName" label="用户昵称"> </el-table-column> 
+          <el-table-column prop="" label="审核" >
+            <template slot-scope="scope"> 
+                <el-button type="success"  disable-transitions @click="checkFriendLast(scope.row.id,'S')">同意 </el-button>
+                <el-button type="warn"  disable-transitions @click="checkFriendLast(scope.row.id,'F')">拒绝 </el-button>
+            </template>
+          </el-table-column>
+        </el-table>         
+         
+    </el-dialog>
 
-        <div slot="title" >
-            <div >编辑框</div>
-        </div> 
-   
-        <el-row :gutter="24"> 
-           <el-col :span="8" align="left">  
-             <el-button type="success" style="margin-top:8px;" icon="el-icon-check">&nbsp;&nbsp;&nbsp; {{practiseRightTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
-             <el-button type="danger"  style="margin-left:15px;" icon="el-icon-close">&nbsp;&nbsp;&nbsp; {{practiseWrongTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
-        
+
+    <!-- 生词设置对话框 -->
+    <el-dialog :title="titleNewWordSetting" 
+               :visible.sync="openNewWordSetting" width="900px" append-to-body 
+               :show-close="true"  >       
+
+        <el-row  :gutter="24">
+          <el-col :span="18">
+             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
           </el-col>
-
-          <el-col :span="8"  :offset="8"  align="right">          
-            <!-- <el-badge value="new" class="item">
-              <el-button size="small" @click="listUsers">挑战好友</el-button> 
-            </el-badge> -->
-            <el-popover
-                    placement="right" @hide="hidePopover"
-                    width="400"
-                    trigger="click"
-                    v-model="openChallenge">
-
-                    <el-form ref="formChellenge" :model="form" :rules="rules" label-width="80px"  @submit.native.prevent>   
-             
-                      <!-- <el-checkbox-group v-model="form.challengeUserList"  v-for="(means,i) in userList" >
-                        <el-checkbox :label="means.friendId" >
-                          {{means.userName}}-{{means.nickName}}
-                        </el-checkbox>  
-                      </el-checkbox-group>  -->
-                      
-                      <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
-                      <el-input
-                          v-model="userNameForSearch"
-                          placeholder="输入好友名称/昵称回车键搜索"
-                          clearable
-                          size="small" 
-                          @keyup.enter.native="listFriends"
-                          style="margin-bottom:15px;"
-                        />
-                       <el-table
-                          ref="multipleTable"
-                          :data="userList"
-                          tooltip-effect="dark"
-                          style="width: 100%"
-                          @selection-change="handleSelectionChangeChallenge">
-                          <el-table-column
-                            type="selection"
-                            width="55">
-                          </el-table-column>
-                          <el-table-column  label="姓名" > 
-                            <template slot-scope="scope">
-                               <el-tag>{{scope.row.userName}} </el-tag>
-                            </template>
-                          </el-table-column>
-                          <el-table-column  label="昵称" > 
-                            <template slot-scope="scope">
-                               {{scope.row.nickName}}
-                            </template>
-                          </el-table-column>
-                       </el-table>    
-
-
-                      <el-input v-model="form.challengePut" placeholder="挑战留言" style="margin-top:15px;margin-bottom:10px;"></el-input>
-                      <el-button size="small" type="primary" @click="chellengeUser" icon="el-icon-position">发起</el-button>
-                      <el-button size="small" type="info" @click="hidePopover" icon="el-icon-s-release">取消</el-button>
-                    </el-form> 
-                    <el-button slot="reference" icon="el-icon-share" style="margin-bottom:15px;" @click="listFriends">挑战好友</el-button>
-            </el-popover>
-
-
-            <el-button  @click="closePractise"  icon="el-icon-error" style="margin-left:15px;margin-top:8px;"  >结束练习</el-button>
-  
-          </el-col>
-    
-        </el-row>  
-
-
-        <el-row :gutter="24"> 
-          <!-- <el-col :span="4" align="middle">  
-             <el-button type="success" style="margin-bottom:15px;" icon="el-icon-check">&nbsp;&nbsp;&nbsp; {{practiseRightTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
-             <el-button type="danger"  style="margin-bottom:15px;margin-left:0px;" icon="el-icon-close">&nbsp;&nbsp;&nbsp; {{practiseWrongTimes}}&nbsp;&nbsp;&nbsp;</el-button> 
-        
-          </el-col>    -->
-          <el-col :span="18" align="middle"> 
-             <el-card  shadow="always" body-style="{ padding: '10px' }">
-              <span :style="wordStyle">
-                  {{this.currentWord.word}}
-              </span>  
-             </el-card>  
-          </el-col>
-  
-          <el-col :span="6" align="right">  
-             <el-progress  :percentage="practiseRatio" type="circle" :width="100" :format="format" class="elprogress"></el-progress> 
-          </el-col>
-
-        </el-row>
-        
-        <el-row :gutter="22" v-if="challengeReplyShow">
-          <el-col :span="12">
-            <el-tag effect="plain">挑战者说</el-tag>     {{this.currentWord.challengePut}}
-          </el-col>
-        </el-row>  
-        <el-row  v-if="challengeReplyShow" style="margin-top:5px;">
-          <el-col  > 
-            <!-- <el-tag effect="plain">我的回复</el-tag>   -->
-            <el-input placeholder="我的回复" v-model="challengeReply"  size="15"></el-input> 
-             
+          <el-col :span="6">
+            <el-tooltip class="item" effect="dark" content="保存设置" placement="top-start">     
+                <el-button type="success" icon="el-icon-check"  @click="saveSetting"  style="margin-bottom:10px;padding:10px;">保存设置</el-button>
+            </el-tooltip>
           </el-col>
         </el-row>
 
-        <!-- <el-divider content-position="left"><span class="countDown">倒计时：{{countDown}}</span></el-divider> -->
-        <!-- <el-progress :percentage="100" status="exception"></el-progress> -->
-        <el-progress :percentage="countDownRatio" :status="countDownStatus" ></el-progress>
+        <el-collapse v-model="activeNames" >
+            <el-collapse-item title="生词练习间隔时间设置" name="1">  
+              <el-tooltip class="item" effect="dark" content="新增次数" placement="top-start">     
+                <el-button type="primary" icon="el-icon-plus" size="small" @click="addMemory" style="padding:10px;"></el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="删除次数" placement="top-start">     
+                <el-button type="primary" icon="el-icon-delete" size="small" @click="delMemory" style="padding:10px;"></el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="恢复默认值" placement="top-start">  
+                <el-button type="primary" icon="el-icon-refresh-right" size="small"  @click="refreshMemory" style="margin-bottom:10px;padding:10px;"></el-button>
+              </el-tooltip>
+
+              <div class="block" v-for="(memory,i) in this.wordSettingMemory" >
+                <!-- <el-slider :value="memory111.settingValue" show-input max="200"> fwe </el-slider>{{memory111.settingValue}} -->
+                <el-tag effect="plain">第{{memory.settingName}}次</el-tag>练习间隔(小时) <el-input-number v-model="memory.settingValue" :step="24"  size="small"></el-input-number>
+              </div>      
+            </el-collapse-item>
+
+            <el-collapse-item title="生词目标值设置" name="2">  
+              <el-tooltip class="item" effect="dark" content="新增月份目标" placement="top-start">     
+                <el-button type="primary" icon="el-icon-plus" size="small" @click="addCollect" style="padding:10px;"></el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="删除月份目标" placement="top-start">     
+                <el-button type="primary" icon="el-icon-delete" size="small" @click="delCollect" style="padding:10px;"></el-button>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="恢复默认值" placement="top-start">  
+                <el-button type="primary" icon="el-icon-refresh-right" size="small" @click="refreshCollect" style="margin-bottom:10px;padding:10px;"></el-button>
+              </el-tooltip>
+
+              <div class="block" v-for="(collect,i) in this.wordSettingTarget" >
+                <!-- <el-slider :value="memory111.settingValue" show-input max="200"> fwe </el-slider>{{memory111.settingValue}} -->
+                <el-tag>月份</el-tag>{{collect.settingName}}  
+                <el-divider direction="vertical"></el-divider>
+                <el-tag>收集生词目标</el-tag><el-input-number v-model="collect.settingValue" :step="50" size="small"></el-input-number>
+                <el-divider direction="vertical"></el-divider>
+                <el-tag>消灭生词目标</el-tag><el-input-number v-model="collect.settingValueTwo" :step="50" size="small"></el-input-number>
+                <el-divider direction="vertical"></el-divider>
+                <el-tag>练习准确率</el-tag><el-input-number v-model="collect.settingValueThree" :step=0.1 max=1  size="small"></el-input-number>
+              </div>     
+            </el-collapse-item>          
+            
+        </el-collapse>     
+
+         
+    </el-dialog>
  
-        <el-row :gutter="24">
-          <el-col :span="24">
-            <!-- <div class="grid-content bg-purple">
-              <el-card class="box-card">
-                <div v-for="(item, index) in this.suggestWords" :key="index"> 
-                  <el-button :type="item.result" round  style="text-align: left;margin-top: 2px" @click="checkAnswer(item,index)"> 
-                      <span style="margin-left: 2px" v-for="means in item.meansList" > 
-                          <el-tag size="small" effect="plain">{{means.posName}}</el-tag> &nbsp;&nbsp;&nbsp;{{means.means}}  </br></br>
-                      </span> 
-                    </el-button> 
-                    
-                </div>
-              </el-card>
-            </div> --> 
+    <!-- 个人设置 -->
+    <el-dialog  title="个人设置" 
+               :visible.sync="openUserProfile" width="1100px" append-to-body 
+               :show-close="true"  > 
+         <Profile></Profile>
+    </el-dialog>
 
-              
-            <div v-for="(item, index) in this.suggestWords" :key="index" style="display: flex;"> 
-              <el-card class="box-card"  @click.native="checkAnswer(item,index)"> 
-                  <span style="margin-left: 2px" v-for="(means,i) in item.meansList" > 
-                      <span v-if="i != item.meansList.length-1" ><font style="color:green;">{{means.posName}}</font> &nbsp;&nbsp;&nbsp;{{means.means}}  </br></br> </span>
-                      <span v-if="i == item.meansList.length-1" ><font style="color:green;">{{means.posName}}</font> &nbsp;&nbsp;&nbsp;{{means.means}} </span>
-                       
-                  </span>  
-              </el-card>   
-            </div>
-              
-          </el-col> 
-        </el-row>
-    </el-dialog> 
-    
-
-
+    <!-- 小游戏 -->
     <el-dialog :title="titleTest" 
-            :visible.sync="openTest" width="850px" height="800px" append-to-body 
+            :visible.sync="openTest" width="850px" height="800px" append-to-body ref="gameDialog" id="gameDialog"
             :show-close="false" 
             @close="closePractise" 
-            class="practiseDialog" custom-class="practiseDialog2">  
-          <iframe src ="/static/jump/index.html" id="ifr1" name="ifr1" scrolling="yes" width="800px" height="500px"></iframe>
+            class="practiseDialog" custom-class="practiseDialog2">   
+          <el-button type="primary" @click="sendMessage"> 向playCanvas发消息 </el-button>
+          <iframe :src ="jumpUrl" id="ifr1" name="ifr1" scrolling="yes" width="800px" height="500px"></iframe>
     </el-dialog>
 
+    <!-- 排行榜 -->
+    <el-dialog  title="排行榜" 
+               :visible.sync="openRank" width="500px" append-to-body 
+               :show-close="true"  > 
+        
+          <el-tabs v-model="rankActiveName" @tab-click="handleRankClick">
+            <el-tab-pane label="收集单词排行榜" name="all">  
+                <el-table
+                  :data="ranks"
+                  style="width: 100%">
+                   <el-table-column
+                      type="index"
+                      min-width="30%"
+                      label="排名">
+                      <!-- <template slot-scope="scope">  
+                          <el-tag size="medium">{{ scope.row.index }}</el-tag> 
+                      </template> -->
+                   </el-table-column>   
+                  <el-table-column
+                    prop="userName"
+                    label="昵称"
+                    min-width="35%"> 
+                  </el-table-column>
+                  <el-table-column
+                    prop="allNum"
+                    label="收集单词数"
+                    min-width="35%">
+                  </el-table-column> 
+                </el-table> 
+            </el-tab-pane>
+
+
+            <el-tab-pane label="消灭单词排行榜" name="dead">
+                <el-table
+                  :data="ranks"
+                  style="width: 100%">
+                   <el-table-column
+                      type="index"
+                      min-width="20%"
+                      label="排名">
+                      <!-- <template slot-scope="scope">  
+                          <el-tag size="medium">{{ scope.row.index }}</el-tag> 
+                      </template> -->
+                   </el-table-column>   
+                  <el-table-column
+                    prop="userName"
+                    label="昵称"
+                    min-width="40%"> 
+                  </el-table-column>
+                  <el-table-column
+                    prop="allNum"
+                    label="消灭单词数"
+                    min-width="40%">
+                  </el-table-column> 
+                </el-table> 
+            </el-tab-pane>
+            </el-tab-pane> 
+          </el-tabs>
+    </el-dialog>
+
+
+    <!-- 续费 -->
+    <el-dialog  title="续费窗口" 
+            :visible.sync="openPay" width="650px" height="600px" append-to-body 
+            :show-close="false" 
+            @close="closePractise"  >  
+         
+              <el-tag>续费后会员有效期到：{{afterPayValidTo}}</el-tag>
+         
+              <!-- <span style="margin-left: 2px" >  
+                  <span ><font >{{means.name}}</font> </span> 
+                  <span ><font style="color:green;font-size:'30px'">{{means.price}}</font> 元</span> 
+              </span>   -->
+              <el-radio-group v-model="payType" @change="changePay()"> 
+                  <el-card>
+                    <el-radio  v-for="(means,i) in payData" :label="means.price"> 
+                          <font >{{means.name}}</font><el-divider direction="vertical"></el-divider><font style="color:green;size:'30px'">{{means.price}}</font> 元 
+                    </el-radio>
+                 </el-card>   
+              </el-radio-group>   
+          <el-button type="success" plain @click="pay()" style="margin-top:20px;">去支付</el-button> 
+
+          <!-- 调出二维码 -->
+          <div v-if="payCode" style="width:200px;height:250px;margin:0 auto;margin-top:20px;">
+            <div id="qrcode" ref="qrcodeRef" ></div>
+            <!-- <a>点击刷新</a> <br/> --> 
+          </div>
+
+    </el-dialog>
+
+    <!-- 续费 -->
+    <el-dialog  title="扫码支付窗口" :visible.sync="wxPay" width="650px" height="600px" append-to-body 
+            :show-close="false"> 
+         
+         二维码
+
+
+    </el-dialog>
+
+ 
   </div>
+   
 </template>
 
 <script>
@@ -684,11 +705,18 @@ import LineChart from '@/views/dashboard/LineChart'
 import RaddarChart from '@/views/dashboard/RaddarChart'
 import PieChart from '@/views/dashboard/PieChart'
 import BarChart from '@/views/dashboard/BarChart'
-import { listNewWords, listNewWordsRandom,selectNewWordsCollect,selectExpectActual,selectChallengeCollect,getNewWords, delNewWords, addNewWords, updateNewWords,addChallenge,selectFriendsDyn} from "@/api/study/newWords";
+import Profile from "@/views/system/user/profile/index";
+import { listNewWords, listNewWordsRandom,selectNewWordsCollect,selectExpectActual,selectChallengeCollect,getNewWords, delNewWords, addNewWords, updateNewWords,addChallenge,selectFriendsDyn,listHots,editBatch,selectRank} from "@/api/study/newWords";
 import { listEnglishWords, getEnglishWords, delEnglishWords, addEnglishWords, updateEnglishWords,listEnglishWordsSuggest } from "@/api/study/englishWords";
 import { listNewWordsRecords, getNewWordsRecords, delNewWordsRecords, addNewWordsRecords, updateNewWordsRecords } from "@/api/study/newWordsRecords";
 import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
-import { listFriends, getFriends, delFriends, addFriends, updateFriends ,listFriendsTwoWay} from "@/api/study/friends"; 
+import { listFriends, getFriends, delFriends, addFriends, updateFriends ,listFriendsTwoWay} from "@/api/study/friends";  
+import { listSetting, getSetting, delSetting, addSetting, updateSetting,editSettingBatch } from "@/api/study/setting";
+import QRCode from "qrcodejs2";
+import { uuid } from 'vue-uuid';
+import AddNewWord from "@/views/study/newWords/addNewWord";
+import PractiseNewWord from "@/views/study/newWords/practiseNewWord";
+import PractiseNewWord2 from "@/views/study/newWords/practiseNewWord2";
 
 const lineChartData = {
         newVisitis: {
@@ -720,7 +748,11 @@ export default {
     LineChart,
     RaddarChart,
     PieChart,
-    BarChart
+    BarChart,
+    Profile,
+    AddNewWord,
+    PractiseNewWord,
+    PractiseNewWord2
   },
   data() {
     return {
@@ -778,11 +810,12 @@ export default {
       },
 
       //自动填充列表
-      suggestWords: [],
-      currentWord: {},
-      addButtonDisabled: false,
-      addButtonTip: "",
-      wordStyle: "margin: 20px;color:black;font-size:58px;font-family:Arial",
+      // suggestWords: [],
+      // currentWord: {},
+      
+      // addButtonDisabled: false,
+      // addButtonTip: "",
+      //wordStyle: "margin: 20px;color:black;font-size:58px;font-family:Arial;",
       english1: ['a','b','c','d','e','f','g','h','i','g','k','l','m','n'],
       english2: ['o','p','q','r','s','t','u','v','w','x','y','z'],
       practiseType: false,
@@ -801,7 +834,7 @@ export default {
       clock:null,
       autocompleteFocus: true,
       lineChartData: lineChartData.newVisitis,
-      titleTest: 'test',
+      titleTest: '小游戏',
       pieData: [
               { value: 360, name: '已消灭' },
               { value: 220, name: '可练习' },
@@ -823,9 +856,58 @@ export default {
       multipleSelectionChallenge: [], //选中要挑战的好友数据
       userNameForSearch: "", //挑战时查询的好友列表
       avater: this.$store.state.user.avatar,
+      validTo: this.$store.state.user.validTo,
       nickName: this.$store.state.user.nick,
+      deptname: this.$store.state.user.deptname,
       friendsDyn: [],
       showChart: "月度目标",
+ 
+
+       friendTableData: [],
+       titleAddFriend: "添加好友",
+       titleCheckFriend: "审核好友",
+       titleNewWordSetting: "生词设置",
+       openAddFriend: false,
+       openCheckFriend: false,
+       openNewWordSetting: false,
+       // 表单参数
+       friend: {},
+       userNameForSearch: "",
+       currentFriendStatus: "",
+       currentFriendStatusTip: "",
+       checkFriendCount: "",
+       checkFriendTableData: [],
+
+       wordSettingMemory: [],
+       wordSettingTarget: [],
+       activeNames: ['1','2'],
+       openUserProfile: false,
+       hotWordsData: [],
+       tagType: ['success','info','danger','warning'],
+       gradeDesc: '', //用户等级描述
+       openRank: false, //排行榜开关
+       ranks: [],  //排行榜数据
+       rankActiveName: 'all', //默认排行榜展示tab
+       outDateFlag: false, //是否过期
+       openPay: false, //续费窗口
+       payData: [
+              { price: 20, name: '一个月' },
+              { price: 50, name: '三个月' },
+              { price: 180, name: '一年' },
+              { price: 500, name: '永久' }],
+       payType: "",       
+       afterPayValidTo: this.$store.state.user.validTo,
+       wxPay: false,
+       payCode: false, //是否显示付款二维码,
+       //jumpUrl: this.$router.options.base+'/static/jump/index.html',
+       jumpUrl: '',
+       practiseWordArray: [],  //练习生词时一次加载多个（打开练习页面时加载一次，后续切换时不必每次都加载，减轻后端服务器压力）
+       suggestWordsArray: [],  //练习生词时一次加载100个选项（打开练习页面时加载一次，后续切换时不必每次都加载，减轻后端服务器压力）
+       oncePractiseCount: 0,   //单词练习生词次数,
+       overTime: false,        //是否超时（如果超时需用户确认是否继续，防止用户打开一个练习页面去干其他事，一直在那刷新判错）
+       showPractise2: false,
+       practiseType: "english",
+       showOpenAdd: false,
 
     };
   },
@@ -836,10 +918,13 @@ export default {
     this.selectExpectActual();
     this.selectChallengeCollect();
     this.selectFriendsDyn();
+    this.listCheckFriend();
+    //lert(this.$store.state.user.avatar);
+    this.gradeDesc = this.getGradeDesc();
   },
   methods: {
     /** 查询生词列表 */
-    getList() {
+    getList() { 
       this.loading = true;
       this.queryParams.userId = this.$store.state.user.id;
       listNewWords(this.queryParams).then(response => {
@@ -857,10 +942,12 @@ export default {
     getNewWordCollect() {
         //1.查询单词统计信息 
         selectNewWordsCollect(this.$store.state.user.id).then(response => {  
-            this.allNum = response.allNum; 
-            this.passNum = response.passNum; 
-            this.aliveNum = response.aliveNum; 
-            this.practiseNum = response.practiseNum;
+            if(response != ''){
+              this.allNum = response.allNum; 
+              this.passNum = response.passNum; 
+              this.aliveNum = response.aliveNum; 
+              this.practiseNum = response.practiseNum; 
+            }
             //设置饼图数据
             this.pieData = [
               { value: this.passNum, name: '已消灭' },
@@ -974,7 +1061,7 @@ export default {
         lastRigthTime: null,
         createBy: this.$store.state.user.id,
         createTime: null,
-        updateBy: listNewWordsRandom,
+        updateBy: this.$store.state.user.id,
         updateTime: null,
         remark: null,
         challengeUserList: [],
@@ -999,19 +1086,50 @@ export default {
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.currentWord = {};
-      this.suggestWords = [];
-      this.open = true;
+    handleAdd() {  
+      // this.reset();
+      // this.currentWord = {};
+      // this.suggestWords = [];
+      this.showOpenAdd = true;
       this.title = "添加生词";
-      //this.$refs.autocomplete.$refs.input.focus();
+ 
       this.$nextTick(() => {
-　　　　　　this.$refs.autocomplete.focus()  
-　　　　})
+　　　　　this.$refs.AddNewWord.handleAdd();
+　　　 }) 
+    
+      
     },
-    /** 练习按钮操作 */
-    handlePractise(fightId) {
+
+    /**关闭新增单词页面时调用 */
+    closeAddNewWord() {
+       //alert("close add"); 
+       this.getList(); 
+       this.getNewWordCollect();
+       this.listNewWordChallenge();
+       this.open = false;
+    },
+
+    // handlePractiseNew(fightId) {
+    //   this.$nextTick(() => {
+    //     this.openPractise = true;
+    //     alert(this.$refs.AddNewWord);
+    //     this.$refs.PractiseNewWord.handlePractise(fightId);
+    //   });
+    // },
+
+    /**生词练习 （子组件） */
+    handlePractise2(practiseType) {
+      this.$nextTick(() => { 
+         this.showPractise2 = true;
+         this.practiseType = practiseType;
+　　　　　this.$refs.PractiseNewWord2.handlePractise();
+　　　 })
+    },
+
+
+
+    /** 练习按钮操作 迁移注释 (练习生词)
+    async handlePractise(fightId) {
       this.reset(); 
       this.countDown=60;
       this.countDownRatio = 100;
@@ -1023,9 +1141,12 @@ export default {
       this.queryParams.word = '';
       this.queryParams.status = this.practiseWordStatus;
       this.wordStyle = "margin-left: 10px;color:black;font-size:58px;font-family:Arial";
+      this.overTime = false;
       this.title = "练习生词"; 
       //alert(fightId);
-      if(fightId > 0){//区分是练习生词还是接受挑战进入
+
+      //区分是练习生词还是接受挑战进入（组装不同的查询条件）
+      if(fightId > 0){
         this.queryParams.id = fightId;
         this.queryParams.challengeId = this.$store.state.user.id;
         this.queryParams.challengeStatus = "E";
@@ -1041,69 +1162,103 @@ export default {
         this.challengeReplyShow = false;
       }
 
-      //加载随机生词
+      //加载随机生词 【云服务器上会发生建议单词已经查询出来但是currentWord值还没返回的情况，这个方法加上async，接口加上await 表示等待它执行完毕再往下走，相当于同步】
       var isNew = false;
-      listNewWordsRandom(this.queryParams).then(response => {
-          if(response.rows.length<=0){
-              return;
-          }
-          if(response.rows.length>0){
-              isNew = true;
-              this.currentWord = response.rows[0]; 
-              //this.currentWord.exchange = JSON.parse(this.currentWord.exchange);
-              this.currentWord.result = "info";  
-              
-              //设置倒计时
-              if(this.clock){  
-                window.clearInterval(this.clock);
-              } 
-              this.clock = window.setInterval(() => {
-                //alert(this.countDown);
-                if(!this.suspend){
-                    this.countDown--;
-                    this.countDownRatio = Math.floor(this.countDown/60*100);
-                    //console.log(this.countDownRatio);
-                    if(this.countDownRatio <= 40){ 
-                       this.countDownStatus = 'exception';
-                    }else if(this.countDownRatio <= 70){
-                       this.countDownStatus = 'warning';
-                    }
-                } 
-                if (this.countDown <= 1) {
-                  window.clearInterval(this.clock);
-                  //超时自动调用答题卡，设置word为空，判定为错误 ,注意深拷贝，不然两个是同一个对象
-                  let overWord = JSON.parse(JSON.stringify(this.currentWord));
-                  overWord.word = "abdfs";
-                  this.checkAnswer(overWord,-1);
-                }
-              }, 1000);
-          } 
+      var canPractise = true;
+      //打开页面时加载的生词用完了再加载
+      if(this.practiseWordArray.length<=0){ 
+          await listNewWordsRandom(this.queryParams).then(response => {
+              if(response.rows.length<=0){
+                  canPractise = false;
+                  this.currentWord.word = "没有可练习的生词";
+                  this.suspend = true;
+                  this.$forceUpdate();
+                  return;
+              }else if(response.rows.length>0){
+                  isNew = true;
+                  canPractise = true;
+                  this.oncePractiseCount++;
+                  //alert(response.rows.length);
+                  this.practiseWordArray = response.rows;
+                  this.currentWord =this.practiseWordArray.pop(); 
+                  //this.currentWord.exchange = JSON.parse(this.currentWord.exchange);
+                  this.currentWord.result = "info";  
 
-      });
- 
-      //加载选项备选项单词（随机两位字母模糊查询出5条)
-      var random1 = Math.round(Math.random()*13)+0;
-      var random2 = Math.round(Math.random()*11)+0;
-      this.queryParams.word = this.english1[random1]+this.english2[random2];
-      //alert(this.english1[random1]);
-      console.log(this.queryParams);
-      //模糊查询单词返回满足条件的前五条
-      listEnglishWordsSuggest(this.queryParams).then(response => {
-        this.suggestWords = response.rows; 
-        for(var index in this.suggestWords){ 
-          this.suggestWords[index].result = "";
+              }  
+          });
+      }else{
+          isNew = true;
+          canPractise = true;  
+          this.oncePractiseCount++;
+          this.currentWord =this.practiseWordArray.pop();  
+          this.currentWord.result = "info";  
+      }
+
+      //符合练习条件则设置倒计时
+      if(canPractise){        
+          //设置倒计时
+          if(this.clock){  
+            window.clearInterval(this.clock);
+          } 
+          this.clock = window.setInterval(() => {
+            //alert(this.countDown);
+            if(!this.suspend){
+                this.countDown--;
+                this.countDownRatio = Math.floor(this.countDown/60*100);
+                //console.log(this.countDownRatio);
+                if(this.countDownRatio <= 40){ 
+                  this.countDownStatus = 'exception';
+                }else if(this.countDownRatio <= 70){
+                  this.countDownStatus = 'warning';
+                }
+            } 
+            if (this.countDown <= 1) {
+              window.clearInterval(this.clock);
+              //超时自动调用答题卡，设置word为空，判定为错误 ,注意深拷贝，不然两个是同一个对象
+              let overWord = JSON.parse(JSON.stringify(this.currentWord));
+              overWord.word = "abdfs";
+              this.overTime = true;
+              this.checkAnswer(overWord,-1);
+            }
+          }, 1000);
+      }
+
+  
+      //有可练习的单词
+      if(canPractise){
+        //未加载过（打开练习页面时加载的101条）、或者打开后练习生词数高于10个时重新加载列表
+        if(this.suggestWordsArray.length <= 0 ||  this.oncePractiseCount > 10){
+            //加载选项备选项单词（随机两位字母模糊查询出5条)
+            // var random1 = Math.round(Math.random()*13)+0;
+            // var random2 = Math.round(Math.random()*11)+0;
+            //this.queryParams.word = this.english1[random1]+this.english2[random2];  //后台通过数据库随机查询选项单词
+            console.log(this.queryParams);
+            //模糊查询单词返回满足条件的前五条
+            await listEnglishWordsSuggest(this.queryParams).then(response => { 
+              this.suggestWordsArray = response.rows;  
+            });
+            
+        } 
+
+        //从加载的101条选项中随机选择4个放入suggestWords
+        for(var index=0;index<4;index++){ 
+            this.suggestWords[index] = this.suggestWordsArray[Math.round(Math.random()*40)];
+            //alert(JSON.stringify(this.suggestWords[index]));
+            this.suggestWords[index].result = "";
         }
-        //把随机生词，随机加入到选项意思列表里 
+              
+        //当前练习的生词随机加入到suggestWords的选项意思列表里【位置随机】
         this.suggestWords[parseInt(Math.random() * (this.suggestWords.length-1 - 0 + 1) + 0)] = this.currentWord;
         this.currentWord.result = "";
-
-      });
-     
-
-      
-
+ 
+      } 
+ 
     },
-    checkAnswer(wordClick,index){
+    */
+
+    
+    /** 检查答案是否正确 迁移注释 (练习生词)
+    async checkAnswer(wordClick,index){
         //alert(wordClick);   
         if(wordClick.word == this.currentWord.word){
             wordClick.result = "success"; 
@@ -1163,27 +1318,50 @@ export default {
               //this.created();
             }
         }else{ //否则走正常的单词练习
-            setTimeout(() => {
-              this.handlePractise(0);
-            },500);
+            if(this.overTime){
+               let that = this;
+               await this.$alert('点击确定继续练习', '已超时', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    // this.$message({
+                    //   type: 'info',
+                    //   message: `action: ${ action }`
+                    // });
+                    setTimeout(() => {
+                      that.handlePractise(0);
+                    },500);
+                  }
+              });
+            }else{
+              setTimeout(() => {
+                this.handlePractise(0);
+              },500);
+            }
+            
         }
  
         
     },
-
-    closePractise(){
+*/
+    closePractise(){ 
+     //alert(this.$refs.PractiseNewWord);
       this.practiseRatio = 0;       //单次练习正确率
       this.practiseRightTimes = 0;  //单次练习正确次数
       this.practiseWrongTimes = 0;   //单次练习错误次数
+      this.oncePractiseCount = 0;   //单词练习生词数（实际）
       this.openPractise = false;
       this.continueFight = false;
+      this.suggestWordsArray = [];
+      this.practiseWordArray = [];
       this.getList();
       this.getNewWordCollect();
-      this.listNewWordChallenge();
+      this.listNewWordChallenge(); 
+      //this.$refs.PractiseNewWord.closePractise();
       if(this.clock){  
-         window.clearInterval(this.clock);
-      } 
+        window.clearInterval(this.clock);
+      }  
     },
+    
 
     closeList(){ 
       this.openList = false;
@@ -1200,50 +1378,28 @@ export default {
         this.title = "修改生词";
       });
     },
-    /** 提交按钮
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateNewWords(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          } else {
-            addNewWords(this.form).then(response => {
-              if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              }
-            });
-          }
-        }
-      });
-    }, */
-    /** 提交按钮【新增生词】 */
-    submitForm() {
-       
+  
+    /** 提交按钮【新增生词】
+    submitForm() { 
+      //let _this = this;
       this.$refs["form"].validate(valid => {
         if (valid) {  
             addNewWords(this.form).then(response => {
               if (response.code === 200) {
-                this.msgSuccess("新增成功");
-                //this.open = false;
-                this.getList(); 
-                this.getNewWordCollect();
-                this.listNewWordChallenge();
-                //支持继续添加 
-                this.handleAdd();
-                
+                this.msgSuccess("新增成功"); 
+                //改为关闭新增页面时再刷新，节省系统资源
+                // this.getList(); 
+                // this.getNewWordCollect();
+                // this.listNewWordChallenge();
+                //支持继续添加
+                this.handleAdd(); 
               }
             });
           } 
       });
     },
+     */
+
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
@@ -1265,7 +1421,7 @@ export default {
       }, `study_newWords.xlsx`)
     },
 
-    /**autoComplete 英语单词 */
+    /**autoComplete 英语单词 
     querySuggest(queryString, callback) {
       //console.log(queryString);
       //console.log(this.$store.state.user.name);
@@ -1289,53 +1445,7 @@ export default {
       }
        
     },
-
-    handleSelect(item) {
-        console.log(item);
-        this.currentWord = item;
-        // alert(this.currentWord.meansList.length);
-        // this.meansList = this.currentWord.meansList;
-        // alert(this.meansList.length);
-        // //alert(JSON.stringify(this.currentWord.meansList));
-        //给form赋值
-        this.currentWord.exchange = JSON.parse(this.currentWord.exchange);  //不知道为什么exchange没有自动转为json对象
-         this.currentWord.voice = JSON.parse(this.currentWord.voice);
-        //alert(this.currentWord.voice.ph_en);
-        this.form.wordId = item.id;
-
-        //查询是否存在，若存在则提示 
-        listNewWords({"userId":this.form.userId,"wordId":this.form.wordId}).then(response => {
-              if(response.rows.length >0){ 
-                  this.addButtonDisabled = true;
-                  this.addButtonTip = "已存在生词列表中，请不要重复添加";
-              }else{
-                  this.addButtonDisabled = false;
-                  this.addButtonTip = "";
-              }
-        });
-
-    } ,
-    handleSelectForEnter() {
-          //alert(this.queryParams.word); 
-          for(var index in this.suggestWords){ 
-              if(this.suggestWords[index].word == this.queryParams.word){
-                 this.handleSelect(this.suggestWords[index]);
-              } 
-          }
-          this.$refs.autocomplete.suggestions = [];
-
-          //查询是否存在，若存在则提示 
-          listNewWords({"userId":this.form.userId,"wordId":this.form.wordId}).then(response => {
-                if(response.rows.length >0){ 
-                    this.addButtonDisabled = true;
-                    this.addButtonTip = "已存在生词列表中，请不要重复添加";
-                }else{
-                    this.addButtonDisabled = false;
-                    this.addButtonTip = "";
-                }
-          });
-
-    } ,
+    */
 
     playSound(){
       //alert(url);
@@ -1355,9 +1465,60 @@ export default {
     } ,
 
 
-        /** 练习按钮操作 */
+    createIframe(dom, src, onload) {
+        //在document中创建iframe 
+        var iframe = document.createElement("iframe"); 
+        //设置iframe的样式 
+        iframe.style.width = "800px"; 
+        iframe.style.height = "500px"; 
+        // iframe.style.margin = "0"; 
+        // iframe.style.padding = "0"; 
+        // iframe.style.overflow = "hidden"; 
+        iframe.style.scrolling = "yes"; 
+        iframe.style.border = "none"; 
+        //绑定iframe的onload事件,处理事件的兼容问题
+
+        if ( onload && Object.prototype.toString.call(onload) === "[object Function]"
+
+        ) {
+            if (iframe.attachEvent) {
+                iframe.attachEvent("onload", onload); 
+            } else if (iframe.addEventListener) {
+                iframe.addEventListener("load", onload); 
+            } else {
+                iframe.onload = onload; 
+            } 
+        } 
+        iframe.src = src; 
+        //把iframe载入到dom以下 
+        dom.appendChild(iframe); 
+        return iframe; 
+    },
+
+
+     /** 放松（小游戏） */
     handleTest() { 
+      //alert(this.$router.options.base);
+      //alert(this.jumpUrl);
+      //this.jumpUrl = this.jumpUrl+"?userId="+20;  
+      this.jumpUrl = this.$router.options.base+'/static/jump/index.html'+"?userId="+11;
       this.openTest = true;
+      // var gameDialog = document.getElementById("gameDialog");
+      // alert(gameDialog);
+      //this.createIframe(gameDialog,this.jumpUrl,true);
+    },
+
+    sendMessage() {
+       var iframe = document.getElementById("ifr1");
+       iframe.contentWindow.postMessage({
+          score: 25,
+          type: 'scoreType',
+       }, "http://localhost");
+     
+    },
+
+    callVueBack() {
+        alert('callVueBack');
     },
 
     handleSetLineChartData(type) { 
@@ -1385,16 +1546,23 @@ export default {
        
     },
 
+    /**
     listFriends(){ 
-      this.queryFriendsParams.userId = this.$store.state.user.id;
-      this.queryFriendsParams.status = 'S'; 
-      this.queryFriendsParams.userName = this.userNameForSearch;
-      listFriendsTwoWay(this.queryFriendsParams).then(response => {
-          this.userList = response.rows; 
-          this.openChallenge = true;
-          this.suspend = true;
-        }
-      );
+      if(this.currentWord.word == '没有可练习的生词'){
+          alert('没有可练习的生词');
+          this.hidePopover();
+      }else{ 
+        this.queryFriendsParams.userId = this.$store.state.user.id;
+        this.queryFriendsParams.status = 'S'; 
+        this.queryFriendsParams.userName = this.userNameForSearch;
+        listFriendsTwoWay(this.queryFriendsParams).then(response => {
+            this.userList = response.rows; 
+            this.openChallenge = true;
+            this.suspend = true;
+          }
+        );
+      }
+       */
 
       // //我加的别人
       // listFriends(this.queryFriendsParams).then(response => {
@@ -1412,8 +1580,9 @@ export default {
       //     this.suspend = true;
       //   }
       // );
-    },
+    // }, 
  
+    /**
     chellengeUser() {
       //alert(this.multipleSelectionChallenge);
       //return;
@@ -1426,11 +1595,13 @@ export default {
                 //this.openChallenge = false;  
                 this.suspend = false;
                 this.$refs.multipleTable.clearSelection();
+                this.openChallenge = false;
               }
             });
           } 
       });
     },
+     */
 
     hidePopover() {
       //alert("hide");
@@ -1438,12 +1609,17 @@ export default {
       this.openChallenge = false;
       this.$refs.multipleTable.clearSelection();
     },
+
+    /** 迁移注释 (练习生词) */
     closeFight() {
       this.openFight = false;
     },
     processFight(id) {
       //alert(id);
-      this.handlePractise(id);
+      this.$nextTick(() => {
+　　　　　this.$refs.PractiseNewWord2.handlePractise(id);
+　　　 })
+      //this.handlePractise(id);
     },
     fightAll(){
       if(this.fightTableData.length<=0){
@@ -1454,8 +1630,20 @@ export default {
     },
 
     failAll() {
-      alert("头像");  
+      //alert("头像");  
+      for(var index in this.fightTableData){ 
+          this.fightTableData[index].challengeStatus = 'F';
+          this.fightTableData[index].challengeReply = '举手投降';
+          editBatch(this.fightTableData).then(response => {
+              if (response.code === 200) {
+                this.msgSuccess("已投降");
+                this.fightTableData = [];
+              }
+          });
+                
+      } 
     },
+    
 
 
     getListByStatus(status) {
@@ -1494,23 +1682,439 @@ export default {
     handleSelectionChangeChallenge(val) {
        this.multipleSelectionChallenge = val;
        this.form.challengeUserList = this.multipleSelectionChallenge;
+    },
+
+
+
+   
+    //添加好友、好友审核
+    listCheckFriend() {
+      this.friend.friendId = this.$store.state.user.id;
+      this.friend.status = 'N'; 
+      listFriends(this.friend).then(response => {
+          //alert(response.rows);
+          if(response.rows != ''){
+             this.checkFriendCount = response.rows.length;
+             this.checkFriendTableData = response.rows;
+          }else{
+             this.checkFriendCount = 0;
+             this.checkFriendTableData = [];
+             this.openCheckFriend = false;  
+
+          }
+      }); 
+    },
+
+    addFriend() {
+      this.openAddFriend = true;  
+    },
+
+    searchUser() {
+      //alert(this.userNameForSearch);
+      this.friend.userName = this.userNameForSearch;
+      this.friend.status = ''; 
+      listUser(this.friend).then(response => {
+          this.friendTableData = response.rows;   
+          //查询目前是否是好友或已申请好友
+          this.friend.userId = this.$store.state.user.id;
+          this.friend.friendId = response.rows[0].userId; 
+          this.currentFriendStatus = '';
+          this.currentFriendStatusTip = '';
+          listFriends(this.friend).then(response => {
+              if(response.rows.length > 0){
+                  if(response.rows[0].status == 'N'){ 
+                    this.currentFriendStatusTip = "已经发出好友申请，请耐心等待"; //
+                  }else if(response.rows[0].status == 'S'){ 
+                    this.currentFriendStatusTip = "已经是好友关系"; //
+                  }
+                  this.currentFriendStatus = response.rows[0].status;  
+              }else{ //查询是否对方已经给我发过好友申请
+                  this.friend.userId = this.friend.friendId; 
+                  this.friend.friendId = this.$store.state.user.id;
+                  listFriends(this.friend).then(response => {
+                    if(response.rows.length > 0){
+                        if(response.rows[0].status == 'N'){ 
+                          this.currentFriendStatusTip = "对方已经发出好友申请，请审核通过即可"; //
+                        }else if(response.rows[0].status == 'S'){ 
+                          this.currentFriendStatusTip = "已经是好友关系"; //
+                        }
+                        this.currentFriendStatus = response.rows[0].status;  
+                    }
+                  });
+              }
+          });
+        }
+      );
+      
+    },
+
+    addFriendLast(userId) {
+      //alert(userId);
+      //alert(this.$store.state.user.id);
+      this.friend.userId = this.$store.state.user.id;
+      this.friend.friendId = userId;
+      this.friend.status = "N"; //申请状态 
+      addFriends(this.friend).then(response => {
+          if (response.code === 200) {
+                this.msgSuccess("新增成功，请等待好友审核");
+                this.openAddFriend = false; 
+          }
+        }
+      );
+    },
+
+    checkFriend() {
+      this.openCheckFriend = true;  
+    },
+    checkFriendLast(id,status) {
+      //alert(userId);
+      //alert(this.$store.state.user.id);
+      this.friend.id = id; 
+      this.friend.status = status; //申请状态 
+      updateFriends(this.friend).then(response => {
+          if (response.code === 200) {
+              this.msgSuccess("处理成功");
+              this.listCheckFriend();
+          }
+        }
+      );
+    },
+
+    //生词设置
+    newWordSetting() { 
+      this.listSettingMemory();
+      this.listSettingTarget();
+      this.openNewWordSetting = true;
+    },
+
+    listSettingMemory() {
+      listSetting({"settingType": "memory_method","userId": this.$store.state.user.id}).then(response => {
+        this.wordSettingMemory = response.rows;
+        //alert(this.wordSettingMemory[1].settingValue); 
+      });
+    },
+    listSettingTarget() {
+      listSetting({"settingType": "collect_target","userId": this.$store.state.user.id}).then(response => {
+        this.wordSettingTarget = response.rows;
+        //alert(this.wordSettingMemory[1].settingValue); 
+      });
+    },
+
+
+
+    addMemory() {
+       var newMemory = {};
+       newMemory.userId = this.$store.state.user.id;
+       newMemory.settingType = "memory_method";
+       newMemory.settingName =  this.wordSettingMemory.length+1;
+       newMemory.settingValue = 0;
+       newMemory.status = "T";
+       this.wordSettingMemory.push(newMemory);
+    },
+    delMemory() {
+       this.wordSettingMemory.pop();
+    },
+    refreshMemory() {
+        this.listSettingMemory();
+    },
+
+    addCollect() {
+       var newTarget = {};
+       newTarget.userId = this.$store.state.user.id;
+       newTarget.settingType = "collect_target";
+       //计算下一个月 
+       var date = new Date(this.wordSettingTarget[this.wordSettingTarget.length-1].settingName);
+       var nextYearMonth = '';
+       if(date.getMonth()>10){
+           nextYearMonth = (date.getFullYear()+1)+"-01";
+       }else{
+         if(date.getMonth()<=7){
+           nextYearMonth = date.getFullYear() +"-0" + (date.getMonth()+2);
+         }else{
+           nextYearMonth = date.getFullYear() +"-" + (date.getMonth()+2); 
+         }
+       }
+       newTarget.settingName =  nextYearMonth;
+       newTarget.settingValue = 0;
+       newTarget.settingValueTwo = 0;
+       newTarget.settingValueThree = 0;
+       newTarget.status = "T";
+       this.wordSettingTarget.push(newTarget);
+    },
+    delCollect() {
+       this.wordSettingTarget.pop();
+    },
+    refreshCollect() {
+         this.listSettingTarget();
+    },
+
+    saveSetting() {
+      //alert(this.wordSettingMemory.length);
+      //alert(this.wordSettingTarget.length); 
+      editSettingBatch(this.wordSettingMemory).then(response => {
+        if (response.code === 200) {
+            editSettingBatch(this.wordSettingTarget).then(response => {
+              if (response.code === 200) {
+                  this.msgSuccess("保存成功");
+                  this.selectExpectActual();
+                  this.openNewWordSetting = false;
+              }else{
+                  this.msgError("保存失败");
+              }
+            }); 
+        }
+      });
+
+   },
+
+   toUserProfile() {
+      this.openUserProfile = true;
+   },
+
+   
+   addToMe(word) {
+     //alert(wordId);
+    //  this.currentWord = word;
+    //  this.currentWord.exchange = '';  //不知道为什么exchange没有自动转为json对象
+    //  this.currentWord.voice = JSON.parse(this.word.voice); 
+     this.form.wordId = word.wordId; 
+     this.form.userId = this.$store.state.user.id;
+     this.form.status = 'A';
+     this.form.wrongTimes = 0;
+     this.form.rightTimes = 0;
+     this.form.createBy = this.form.userId;
+
+     //查询是否存在，若存在则提示 
+      listNewWords({"userId": this.$store.state.user.id,"wordId": this.form.wordId}).then(response => {
+            if(response.rows.length >0){ 
+                this.msgError("您已收集过此单词");
+                // const h = this.$createElement; 
+                // this.$notify({
+                //   title: '已存在',
+                //   message: h('i', { style: 'color: teal'}, '您已收集此单词')
+                // });
+            }else{
+                //this.submitForm();
+                addNewWords(this.form).then(response => {
+                  if (response.code === 200) {
+                    this.msgSuccess("新增成功");
+                    //this.open = false;
+                    this.getList(); 
+                    this.getNewWordCollect();
+                    this.listNewWordChallenge();
+                    //支持继续添加
+                    if(this.open){
+                      this.handleAdd(); 
+                    } 
+                  }
+                });
+            }
+      });
+   },
+
+
+   getGradeDesc() {
+      if(this.allNum >= 0 && this.allNum <= 50){
+          return '青铜';
+      }else if(this.allNum > 50 && this.allNum <= 200){
+          return '白银';
+      }else if(this.allNum > 200 && this.allNum <= 500){
+          return '黄金';
+      }else if(this.allNum > 500 && this.allNum <= 800){
+          return '铂金';
+      }else if(this.allNum > 800 && this.allNum <= 1200){
+          return '钻石';
+      }else if(this.allNum > 1200 && this.allNum <= 2000){
+          return '星耀';
+      }else if(this.allNum > 2000){
+          return '王者';
+      }
+   },
+
+   /** 导出按钮操作 */
+    handleExport() {
+      this.download('study/newWords/export', {
+        ...this.queryParams
+      }, `user_${new Date().getTime()}.xlsx`)
+    },
+ 
+    
+    selectRank() {
+       this.openRank = true;
+       //1.排行榜
+       selectRank(null).then(response => {   
+          this.ranks = response.rows;
+      });
+       
+    },
+    handleRankClick(){
+       if(this.rankActiveName == 'dead'){
+           //1.排行榜
+            selectRank('D').then(response => {   
+                this.ranks = response.rows;
+            });
+       }else{
+            //1.排行榜
+            selectRank(null).then(response => {   
+                this.ranks = response.rows;
+            });
+       }
+    },
+
+    checkValidTo() {
+       let validDate = Date.parse(new Date(this.validTo));
+       if(validDate > new Date){
+          return false;
+       }else{
+          return true;
+       }
+    },
+
+    toPay() {
+       this.openPay = true;
+    },
+
+    pay() {
+       //alert(this.payType);
+       if(this.payType == ''){
+          alert("请选择付费方式");
+          return;
+       }
+
+      //  this.openPay = false;
+      //  this.wxPay = true;
+       this.payCode = true; 
+
+       //生成url对应的二维码
+       this.uuidForWeixin = (uuid.v1());
+         
+       let that = this;
+       let qrcode = new QRCode("qrcode", {
+          width: 200,
+          height: 200,
+          correctLevel : 3,
+          text: 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx6c8d12d25b64c78f&redirect_uri=https%3A%2F%2F9f33960714.imdo.co%2Fauth%2FweChatPay&response_type=code&scope=snsapi_userinfo&state='+this.uuidForWeixin+'#wechat_redirect',
+       });
+
+       
+       
+
+    },
+
+    changePay() {
+      
+       if(this.payType == '20'){
+          this.afterPayValidTo = this.$moment(Date.parse(new Date(this.validTo))).add(1,'months').format('YYYY-MM-DD HH:mm:ss');
+       }else if(this.payType == '50'){
+          this.afterPayValidTo = this.$moment(Date.parse(new Date(this.validTo))).add(3,'months').format('YYYY-MM-DD HH:mm:ss');
+       }else if(this.payType == '180'){
+          this.afterPayValidTo = this.$moment(Date.parse(new Date(this.validTo))).add(1,'years').format('YYYY-MM-DD HH:mm:ss');
+       }else if(this.payType == '500'){
+          this.afterPayValidTo = this.$moment(Date.parse(new Date(this.validTo))).add(100,'years').format('YYYY-MM-DD HH:mm:ss');
+       } 
+    },
+
+
+
+    async logout() {
+      this.$confirm('确定注销并退出系统吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$store.dispatch('LogOut').then(() => {
+          //location.href = '/index';
+          //alert(this.$router.options.base+'/index');
+          location.href = this.$router.options.base+'/index';   //如果部署到nginx非根节点，如study，则此处需加上前置study，本机不需要
+        })
+      })
+    },
+
+
+    changeTitleTest(score) {
+       this.titleTest = this.titleTest+score;
     }
+
 
   },
 
 
 
   mounted() {
-
      
-  }
+      listHots(30).then(response => {
+            if(response.rows.length >0){ 
+                //alert(response.rows.length);
+                this.hotWordsData = response.rows;
+            } 
+      });
+
+      this.outDateFlag = this.checkValidTo();
+
+      // window.addEventListener("message",function (event) {
+      //       alert(event.origin);
+      //       if (event.origin === "http://playcanvas") { // always check message came from your website
+      //           var score = event.data.score2;
+      //           this.changeTitleTest(score);
+      //       }
+      //   }, false);
+
+      let that = this;
+      // 监听子页面想父页面的传参
+       window.addEventListener('message', function(event) {
+          //alert("子页面传参到父页面："+event.data.score);
+          //this.changeTitleTest(event.data.score);
+          that.titleTest = that.titleTest+event.data.score;
+          //此处执行事件
+          console.log('监听子页面向父页面的传参', event.data);
+       });
+
+  },
+ 
 };
+
+       
+
+         
 </script>
 
 
 <style lang="scss" scoped>
+
+  .newWord {
+    // display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    // background-image: url("../../../assets/image/loginBackNew.webp");
+    // background-color: #abafb3;
+    background-size: cover;
+  }
+
+  .newWordStyle {
+    margin-top:10px;
+    margin-left:50px;
+    margin-right:50px;  
+  }
+
+  .headerUserInfo {
+    margin-top:3px;
+    margin-bottom:6px;
+    margin-left:30px;
+    margin-right:30px;
+    background-image: url("../../../assets/image/headerBackImg.png");
+  }
+
+  .practiseTop {
+     background-image: url("../../../assets/image/practiseBack.png");
+  }
+
   .text {
     font-size: 10px;
+  }
+
+  .textHot {
+    font-size: 18px;
   }
 
   .item {
@@ -1610,12 +2214,16 @@ export default {
         background: #0ce90c;
       }
 
+      .icon-tool {
+        background: #db5c07;
+      }
+
       .icon-message {
         background: #36a3f7;
       }
 
       .icon-money {
-        background: #f4516c;
+        background: #5de90c;
       }
 
       .icon-shopping {
@@ -1632,6 +2240,10 @@ export default {
       color: #0ce90c;
     }
 
+    .icon-tool {
+        background: #db5c07;
+    }
+
     .icon-people {
       color: #40c9c6;
     }
@@ -1641,7 +2253,7 @@ export default {
     }
 
     .icon-money {
-      color: #f4516c;
+      color: #5de90c;
     }
 
     .icon-shopping {
@@ -1722,20 +2334,21 @@ export default {
     flex-direction: column; 
     overflow: hidden;
     box-sizing: border-box;
+
     .el-dialog__header {
-      background: #1e4b5f;
-      padding-top: 15px;
+      // background: #f8f9fa;
+      background-image: url('../../../assets/image/practiseBack.png');
+      padding-top: 10px;
     }
-    .el-dialog__body {
-      margin: 0 20px 20px 20px;
+    .el-dialog__body { 
+      margin: 0 10px 10px 10px;
       padding: 0;
       overflow: no;
     }
   }
 
   .page-header-content {
-    display: flex;
-
+    display: flex; 
     .avatar {
        flex: 0 1 72px;
        & > span {
@@ -1790,6 +2403,37 @@ export default {
   .el-carousel__item:nth-child(2n+1) {
     background-color: #d3dce6;
   }  
+
+
+  .time {
+    font-size: 13px;
+    color: #999;
+  }
+  
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
+
+  .button {
+    padding: 0;
+    float: right;
+  }
+
+  .image {
+    width: 100%;
+    display: block;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+      display: table;
+      content: "";
+  }
+  
+  .clearfix:after {
+      clear: both
+  }
     
  
 </style>

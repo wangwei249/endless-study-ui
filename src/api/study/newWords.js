@@ -94,3 +94,39 @@ export function addChallenge(data) {
     data: data
   })
 }
+
+
+
+// 查询热词
+export function listHots(count) {
+  return request({
+    url: '/study/newWords/listHots/'+count,
+    method: 'get'
+  })
+}
+
+
+// 创建新用户生词系统相关的默认数据
+export function addUserDefaultSetting(userId) {
+  return request({
+    url: '/study/newWords/addUserDefaultSetting/'+userId,
+    method: 'get'
+  })
+}
+
+// 举手投降
+export function editBatch(data) {
+  return request({
+    url: '/study/newWords/editBatch',
+    method: 'post',
+    data: data
+  })
+}
+
+// 生词统计排行榜
+export function selectRank(status) {
+  return request({
+    url: '/study/newWords/selectRank/'+status,
+    method: 'get'
+  })
+}

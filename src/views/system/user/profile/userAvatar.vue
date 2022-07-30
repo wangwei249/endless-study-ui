@@ -86,7 +86,47 @@ export default {
     // 编辑头像
     editCropper() {
       this.open = true;
+      this.options.img = '';
+      //alert(this.options.img);
+      // 其中this.avatar为当前头像
+
+      //使用腾讯oss，网址为https时提示跨域不能访问，这里把图片转为64
+      let _this = this; 
+      this.setAvatarBase64(store.getters.avatar, (base64) => {
+        // this.$nextTick(() => {
+          alert(base64);
+          _this.options.img = base64;
+        // })
+        
+      });
     },
+
+    // 设置头像base64
+    setAvatarBase64(src, callback) {
+      let _this = this;
+      let image = new Image();
+      // 处理缓存
+      //image.src = src + '?v=' + Math.random();
+      image.src = src;
+      // 支持跨域图片
+      image.crossOrigin = "*";
+      image.onload = function () {
+        let base64 = _this.transBase64FromImage(image);
+        callback && callback(base64);
+      }
+    },
+    // 将网络图片转换成base64格式
+    transBase64FromImage(image) {
+      let canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      let ctx = canvas.getContext("2d");
+      ctx.drawImage(image, 0, 0, image.width, image.height);
+      // 可选其他值 image/jpeg
+      return canvas.toDataURL("image/png");
+    },
+
+
     // 打开弹出层结束时的回调
     modalOpened() {
       this.visible = true;
@@ -128,6 +168,7 @@ export default {
           if (response.code === 200) {
             this.open = false;
             this.options.img = process.env.VUE_APP_BASE_API + response.imgUrl;
+            this.user.avatar = this.options.img; //20220611 设置user的avatar为最新值，否则又被覆盖了
             store.commit('SET_AVATAR', this.options.img);
             this.msgSuccess("修改成功");
           }
